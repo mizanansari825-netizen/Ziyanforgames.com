@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ziyan Cloud Gaming</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#090d18;color:white;
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:20px;background:#111827;
+ display:flex;justify-content:space-between;
+ align-items:center;
+}
+.logo{font-size:21px;font-weight:bold;color:#38bdf8}
+.hero{text-align:center;padding:35px 15px}
+.hero h1{font-size:32px}
+.hero p{color:#aab5c8}
+.search{width:90%;padding:14px;border-radius:12px;
+ border:1px solid #334155;background:#172033;color:white}
+h2{padding:0 16px}
+.games{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px}
+.game{
+ background:#151e30;border-radius:14px;
+ padding:14px;text-align:center;
+ border:1px solid #273449;
+}
+.game .art{font-size:42px;padding:20px}
+.game h3{font-size:16px}
+button{
+ background:#0ea5e9;color:white;border:0;
+ padding:11px 17px;border-radius:9px;
+ font-weight:bold;cursor:pointer;
+}
+footer{text-align:center;padding:25px;color:#8290a5}
+#gameArea{display:none;text-align:center;padding:20px}
+#target{
+ width:100px;height:100px;border-radius:50%;
+ background:#0ea5e9;border:0;font-size:25px;
+ margin:25px;
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">ZIYAN GAMING</div>
+ <div>☰</div>
+</header>
+
+<section class="hero">
+ <h1>PLAY GAMES ONLINE</h1>
+ <p>Play amazing games on your phone. No download needed!</p>
+ <input class="search" id="search"
+ placeholder="Search games..." oninput="filterGames()">
+</section>
+
+<h2>Popular Games</h2>
+
+<div class="games" id="games">
+
+<div class="game" data-name="tap challenge">
+ <div class="art">🎯</div>
+ <h3>Tap Challenge</h3>
+ <p>Free Browser Game</p>
+ <button onclick="startGame()">PLAY NOW</button>
+</div>
+
+<div class="game" data-name="car racing">
+ <div class="art">🏎️</div>
+ <h3>Car Racing</h3>
+ <p>Coming Soon</p>
+ <button disabled>SOON</button>
+</div>
+
+<div class="game" data-name="bike racing">
+ <div class="art">🏍️</div>
+ <h3>Bike Racing</h3>
+ <p>Coming Soon</p>
+ <button disabled>SOON</button>
+</div>
+
+<div class="game" data-name="shooting">
+ <div class="art">🎯</div>
+ <h3>Shooting Game</h3>
+ <p>Coming Soon</p>
+ <button disabled>SOON</button>
+</div>
+
+</div>
+
+<section id="gameArea">
+ <h2>Tap Challenge</h2>
+ <p>Tap the button as many times as possible in 10 seconds!</p>
+ <h2 id="score">Score: 0</h2>
+ <h3 id="timer">Time: 10</h3>
+ <button id="target" onclick="tap()">TAP!</button>
+ <br>
+ <button onclick="startGame()">RESTART</button>
+ <button onclick="closeGame()">BACK</button>
+</section>
+
+<footer>
+ © 2026 Ziyan Gaming | Play. Enjoy. Repeat.
+</footer>
+
+<script>
+let score=0,time=10,interval;
+
+function startGame(){
+ document.getElementById("games").style.display="none";
+ document.querySelector("h2").style.display="none";
+ document.querySelector(".hero").style.display="none";
+ document.getElementById("gameArea").style.display="block";
+ score=0;time=10;
+ document.getElementById("score").innerText="Score: 0";
+ document.getElementById("timer").innerText="Time: 10";
+ clearInterval(interval);
+ interval=setInterval(()=>{
+ time--;
+ document.getElementById("timer").innerText="Time: "+time;
+ if(time<=0){
+ clearInterval(interval);
+ document.getElementById("target").disabled=true;
+ alert("Game Over! Your score: "+score);
+ }
+ },1000);
+ document.getElementById("target").disabled=false;
+}
+
+function tap(){
+ if(time>0){
+ score++;
+ document.getElementById("score").innerText="Score: "+score;
+ }
+}
+
+function closeGame(){
+ clearInterval(interval);
+ document.getElementById("gameArea").style.display="none";
+ document.getElementById("games").style.display="grid";
+ document.querySelector("h2").style.display="block";
+ document.querySelector(".hero").style.display="block";
+}
+
+function filterGames(){
+ let q=document.getElementById("search").value.toLowerCase();
+ document.querySelectorAll(".game").forEach(g=>{
+ g.style.display=g.dataset.name.includes(q)?"block":"none";
+ });
+}
+</script>
+
+</body>
+   </html>
+   
