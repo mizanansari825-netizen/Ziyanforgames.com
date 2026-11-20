@@ -7,70 +7,114 @@
 <title>ZIYAN GAMING</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#090b16;color:white;font-family:Arial,sans-serif}
-header{padding:22px;background:#12162b;text-align:center;border-bottom:2px solid #7654ff}
-header h1{margin:0;color:#a58aff;font-size:30px}
-header p{color:#aaa}
-.search{padding:15px;text-align:center}
-input{width:90%;max-width:500px;padding:14px;border:1px solid #7654ff;border-radius:10px;background:#171b30;color:white;font-size:16px}
-.categories{display:flex;gap:9px;overflow-x:auto;padding:12px}
-.categories button{background:#202541;color:white;border:0;padding:11px 17px;border-radius:20px;white-space:nowrap}
+body{margin:0;background:#080b16;color:white;font-family:Arial}
+header{padding:24px 15px;text-align:center;background:#11172c;border-bottom:2px solid #7654ff}
+header h1{color:#a78bfa;margin:0;font-size:30px}
+header p{color:#aaa;margin-bottom:0}
+.search{padding:18px;text-align:center}
+input{width:95%;max-width:550px;padding:14px;border-radius:12px;border:1px solid #7654ff;background:#171d35;color:white;font-size:16px}
+.categories{display:flex;gap:9px;padding:12px;overflow-x:auto}
+.categories button{background:#202844;color:white;border:0;border-radius:25px;padding:12px 18px;white-space:nowrap}
 .categories button.active{background:#7654ff}
 h2{padding-left:15px}
-.games{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;padding:13px}
-.game{background:#171b30;border-radius:12px;overflow:hidden;border:1px solid #292e4c}
-.game img{width:100%;height:115px;object-fit:cover;background:#252a45}
+.games{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
+.game{background:#171d30;border-radius:13px;overflow:hidden;border:1px solid #303856}
+.game img{width:100%;height:120px;object-fit:cover}
 .game h3{font-size:15px;margin:10px}
-.game button{width:calc(100% - 20px);margin:0 10px 12px;padding:10px;background:#7654ff;border:0;border-radius:7px;color:white;font-weight:bold}
+.game button{width:calc(100% - 20px);margin:0 10px 12px;padding:11px;background:#7654ff;color:white;border:0;border-radius:8px;font-weight:bold}
+#player{display:none;padding:15px}
+#player iframe{width:100%;height:65vh;border:0;border-radius:12px;background:black}
+.back{padding:12px 18px;background:#7654ff;color:white;border:0;border-radius:8px;margin-bottom:12px}
 footer{text-align:center;padding:25px;color:#888}
 </style>
 </head>
 <body>
+
 <header>
 <h1>ZIYAN GAMING</h1>
-<p>YOUR ULTIMATE GAME ZONE</p>
+<p>YOUR ULTIMATE GAMING WORLD</p>
 </header>
+
+<div id="home">
 <div class="search">
 <input id="search" placeholder="Search your favourite game..." oninput="render()">
 </div>
-<div class="categories" id="categories">
+
+<div class="categories">
 <button class="active" onclick="setCategory('All',this)">All Games</button>
 <button onclick="setCategory('Racing',this)">Racing</button>
 <button onclick="setCategory('Action',this)">Action</button>
 <button onclick="setCategory('Sports',this)">Sports</button>
 <button onclick="setCategory('Adventure',this)">Adventure</button>
 </div>
-<h2 id="heading">Popular Games</h2>
+
+<h2>Explore Games</h2>
 <div class="games" id="games"></div>
+</div>
+
+<div id="player">
+<button class="back" onclick="closeGame()">← Back to Games</button>
+<h2 id="gameTitle">Game Player</h2>
+<iframe id="gameFrame" allowfullscreen></iframe>
+<p id="gameMessage">Loading game...</p>
+</div>
+
 <footer>© 2026 ZIYAN GAMING</footer>
+
 <script>
 const games=[
-['Subway Surfers','Action','https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500'],
-['Temple Run','Adventure','https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500'],
-['Car Racing','Racing','https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=500'],
-['Football','Sports','https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=500'],
-['Space Adventure','Adventure','https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=500'],
-['Bike Racing','Racing','https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=500'],
-['Action Arena','Action','https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500'],
-['Basketball','Sports','https://images.unsplash.com/photo-1519861531473-9200262188bf?w=500']
+{name:"Subway Surfers",cat:"Action",img:"https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500",url:""},
+{name:"Temple Run",cat:"Adventure",img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500",url:""},
+{name:"Car Racing",cat:"Racing",img:"https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=500",url:""},
+{name:"Football",cat:"Sports",img:"https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=500",url:""},
+{name:"Space Adventure",cat:"Adventure",img:"https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=500",url:""},
+{name:"Bike Racing",cat:"Racing",img:"https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=500",url:""},
+{name:"Action Arena",cat:"Action",img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500",url:""},
+{name:"Basketball",cat:"Sports",img:"https://images.unsplash.com/photo-1519861531473-9200262188bf?w=500",url:""}
 ];
-let category='All';
+
+let category="All";
+
 function setCategory(c,b){
 category=c;
-document.querySelectorAll('.categories button').forEach(x=>x.classList.remove('active'));
-b.classList.add('active');
+document.querySelectorAll(".categories button").forEach(x=>x.classList.remove("active"));
+b.classList.add("active");
 render();
 }
+
 function render(){
-let q=document.getElementById('search').value.toLowerCase();
-let filtered=games.filter(g=>(category==='All'||g[1]===category)&&g[0].toLowerCase().includes(q));
-document.getElementById('games').innerHTML=filtered.map(g=>`
+let q=document.getElementById("search").value.toLowerCase();
+let filtered=games.filter(g=>(category==="All"||g.cat===category)&&g.name.toLowerCase().includes(q));
+
+document.getElementById("games").innerHTML=filtered.map((g,i)=>`
 <div class="game">
-<img src="${g[2]}" alt="${g[0]}">
-<h3>${g[0]}</h3>
-<button onclick="alert('Game link will be added soon!')">PLAY NOW</button>
-</div>`).join('');
+<img src="${g.img}" alt="${g.name}">
+<h3>${g.name}</h3>
+<button onclick="openGame(${games.indexOf(g)})">PLAY NOW</button>
+</div>`).join("");
 }
+
+function openGame(i){
+let g=games[i];
+document.getElementById("home").style.display="none";
+document.getElementById("player").style.display="block";
+document.getElementById("gameTitle").innerText=g.name;
+
+if(g.url){
+document.getElementById("gameFrame").src=g.url;
+document.getElementById("gameMessage").innerText="Enjoy your game!";
+}else{
+document.getElementById("gameFrame").src="about:blank";
+document.getElementById("gameMessage").innerText="Game coming soon! Authorized game link will be added here.";
+}
+}
+
+function closeGame(){
+document.getElementById("gameFrame").src="about:blank";
+document.getElementById("player").style.display="none";
+document.getElementById("home").style.display="block";
+}
+
 render();
 </script>
 </body>
