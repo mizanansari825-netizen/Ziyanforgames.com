@@ -3,630 +3,520 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZIYAN GAMING</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080b16;color:white;font-family:Arial}
-header{text-align:center;padding:24px;background:#111a30;border-bottom:2px solid #00e5ff}
-header h1{color:#00e5ff;margin:0;letter-spacing:3px}
-header p{color:#aab8d0}
-main{max-width:1100px;margin:auto;padding:16px}
-.tabs{display:flex;gap:10px;margin:20px 0}
-button{border:0;border-radius:9px;background:#00d9ef;color:#00121b;padding:12px;font-weight:bold;cursor:pointer}
-.tabs button{flex:1;padding:16px 5px;font-size:16px}
-.tabs button.active{background:#00e5ff;outline:2px solid white}
-#search{width:100%;padding:14px;border-radius:10px;background:#121a30;border:1px solid #344568;color:white}
-.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-top:16px}
-.card{background:#121a30;border:1px solid #293b5e;border-radius:13px;padding:16px;text-align:center}
-.card .emoji{font-size:38px}
-.card h3{font-size:15px;min-height:32px}
-.card button{width:100%}
-#screen{display:none;position:fixed;inset:0;background:#080b16;z-index:20;padding:14px;overflow:auto}
-.top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #344568}
-.top h2{color:#00e5ff}
-#playArea{max-width:700px;margin:25px auto;text-align:center;background:#121a30;border-radius:16px;padding:20px;min-height:300px}
-#content{margin:20px 0}
-#message{color:#ffe082;min-height:25px}
-.big{font-size:55px;margin:20px}
-#canvas3d{width:100%;max-width:600px;height:320px;background:#17243b;border-radius:12px;display:block;margin:auto}
-.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:12px}
-input{padding:12px;background:#080b16;border:1px solid #00d9ef;color:white;border-radius:8px}
-footer{text-align:center;color:#71809e;padding:25px}
+body{margin:0;background:#080b16;color:white;font-family:Arial,sans-serif}
+header{text-align:center;padding:22px 10px;background:#11172c;border-bottom:2px solid #00e5ff}
+header h1{margin:0;color:#00e5ff;font-size:30px;letter-spacing:2px}
+header p{color:#aab5d0;margin:8px 0 0}
+.tabs{display:flex;gap:10px;padding:15px;max-width:950px;margin:auto}
+.tabs button{flex:1;padding:15px 5px;border:1px solid #00e5ff;border-radius:10px;background:#151d35;color:white;font-weight:bold;font-size:16px}
+.tabs button.active{background:#00c9e8;color:#06101c}
+#listView{max-width:950px;margin:auto;padding:10px 15px 30px}
+.section-title{color:#00e5ff;margin:10px 0 15px}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.game-card{background:#141d34;border:1px solid #293957;border-radius:12px;padding:16px 10px;text-align:center}
+.game-icon{font-size:30px}
+.game-card h3{font-size:15px;margin:10px 0}
+.game-card button{width:100%;padding:10px;border:0;border-radius:7px;background:#00d9f5;color:#06101c;font-weight:bold}
+#gameView{display:none;max-width:700px;margin:15px auto;padding:15px}
+#gameContent{background:#141d34;border:1px solid #293957;border-radius:12px;padding:18px;text-align:center;min-height:250px}
+#gameContent button{padding:11px 15px;margin:5px;border:0;border-radius:7px;background:#00d9f5;color:#06101c;font-weight:bold}
+#gameContent input{padding:12px;border-radius:7px;border:1px solid #00d9f5;margin:6px;max-width:90%}
+.back-btn{width:100%;padding:13px;margin-bottom:12px;background:#ff4757;color:white;border:0;border-radius:8px;font-weight:bold;font-size:16px}
+footer{text-align:center;color:#7e8aa8;padding:20px}
 </style>
 </head>
 <body>
+
 <header>
 <h1>ZIYAN GAMING</h1>
-<p>PLAY • EXPLORE • ENJOY</p>
+<p>PLAY • ENJOY • HAVE FUN</p>
 </header>
-<main>
+
 <div class="tabs">
-<button id="tab2" class="active" onclick="choose('2d')">🎮 2D GAMES</button>
-<button id="tab3" onclick="choose('3d')">🕹️ 3D GAMES</button>
+<button id="tab2d" class="active" onclick="choose('2d')">2D GAMES</button>
+<button id="tab3d" onclick="choose('3d')">3D GAMES</button>
 </div>
-<h2 id="heading">2D GAMES</h2>
-<input id="search" placeholder="Search games..." oninput="render()">
-<div class="games" id="games"></div>
-</main>
+
+<div id="listView">
+<h2 class="section-title" id="listTitle">2D GAMES</h2>
+<div class="games-grid" id="gamesGrid"></div>
+</div>
+
+<div id="gameView">
+<button class="back-btn" onclick="back()">← EXIT GAME</button>
+<div id="gameContent"></div>
+</div>
+
 <footer>© 2026 ZIYAN GAMING</footer>
-<div id="screen">
-<div class="top">
-<h2 id="gameTitle">GAME</h2>
-<button onclick="back()">✕ EXIT</button>
-</div>
-<div id="playArea">
-<div id="message"></div>
-<div id="content"></div>
-</div>
-</div>
+
 <script>
 const games2=[
-["🐍","Snake"],["⚡","Tap Rush"],["⏱️","Reaction Test"],
-["🔢","Number Guess"],["➗","Math Master"],["🧠","Memory Match"],
-["⭕","Tic Tac Toe"],["✊","Rock Paper Scissors"],["🪙","Coin Flip"],
-["🎲","Dice Duel"],["🔨","Whack a Mole"],["🎨","Color Match"],
-["🍊","Odd One Out"],["📈","Higher or Lower"],["⌨️","Typing Test"],
-["🔤","Word Scramble"],["🧩","Sequence Memory"],["🧱","Dodge Blocks"],
-["🏓","Pong"],["🧱","Brick Breaker"],["⭐","Catch Stars"],
-["🔲","2048"],["💡","Lights Out"],["🔍","Quick Count"],
-["🎯","Target Practice"]
+"Snake Game","Tap Challenge","Reaction Test","Guess The Number",
+"Math Challenge","Memory Test","Tic Tac Toe","Rock Paper Scissors",
+"Coin Toss","Dice Roll","Catch The Dot","Color Match",
+"Find The Odd Number","Higher or Lower","Typing Challenge",
+"Word Scramble","Number Sequence","Dodge Game","Pong Mini",
+"Brick Breaker","Catch The Star","2048 Mini","Lights Puzzle",
+"Quick Click","Target Practice"
 ];
+
 const games3=[
-["🏎️","3D Car Racer"],["🏍️","3D Bike Ride"],
-["🏃","3D Runner"],["⚽","3D Football"],["🏀","3D Basketball"],
-["🎳","3D Bowling"],["🧊","3D Cube World"],["🌌","3D Space Flight"],
-["🚀","3D Rocket Journey"],["🏔️","3D Mountain Drive"],
-["🎯","3D Target Game"],["🛸","3D UFO Flight"],
-["🧱","3D Block World"],["🌊","3D Ocean Explorer"],
-["🏰","3D Castle Explorer"],["⚽","3D Soccer Kick"],
-["🚗","3D Traffic Racer"],["🪐","3D Planet Explorer"],
-["🎈","3D Balloon Pop"],["🛹","3D Skate Park"],
-["🚁","3D Helicopter"],["🏁","3D Racing Track"],
-["💎","3D Gem Hunt"],["🧭","3D Maze"],["🌳","3D Forest Walk"]
+"3D Runner","3D Car Drive","3D Bike Ride","3D Ball Run",
+"3D Space Run","3D Road Escape","3D Jump World","3D Racing",
+"3D Cube Runner","3D Sky Runner","3D Tunnel Run","3D Neon Drive",
+"3D Block World","3D Hill Climb","3D Speed Run","3D Obstacle Run",
+"3D Endless Road","3D Space Drive","3D City Run","3D Maze Run",
+"3D Color Road","3D Bridge Run","3D Rocket Run","3D Tower Jump",
+"3D Adventure"
 ];
-let mode="2d",timer=null,score=0,secret=0,board=[];
-const $=id=>document.getElementById(id);
-function choose(m){
- mode=m;
- $("tab2").classList.toggle("active",m==="2d");
- $("tab3").classList.toggle("active",m==="3d");
- $("heading").textContent=m==="2d"?"2D GAMES":"3D GAMES";
- $("search").value="";
- render();
-}
+
+let currentCategory="2d";
+let selectedGame=0;
+
 function render(){
- let arr=mode==="2d"?games2:games3;
- $("games").innerHTML="";
- arr.forEach((g,i)=>{
- if(!g[1].toLowerCase().includes($("search").value.toLowerCase()))return;
- $("games").innerHTML+=`<div class="card"><div class="emoji">${g[0]}</div><h3>${g[1]}</h3><button onclick="openGame(${i})">PLAY NOW</button></div>`;
+ const grid=document.getElementById("gamesGrid");
+ const title=document.getElementById("listTitle");
+ const games=currentCategory==="2d"?games2:games3;
+ title.textContent=currentCategory==="2d"?"25 TWO-DIMENSIONAL GAMES":"25 THREE-DIMENSIONAL STYLE GAMES";
+ grid.innerHTML="";
+ games.forEach((game,index)=>{
+  const card=document.createElement("div");
+  card.className="game-card";
+  const icon=document.createElement("div");
+  icon.className="game-icon";
+  icon.textContent=currentCategory==="2d"?"🎮":"🏎️";
+  const name=document.createElement("h3");
+  name.textContent=game;
+  const button=document.createElement("button");
+  button.textContent="PLAY NOW";
+  button.onclick=()=>openGame(index);
+  card.append(icon,name,button);
+  grid.appendChild(card);
  });
 }
-function msg(t){$("message").textContent=t}
-function html(t){$("content").innerHTML=t}
-function btn(t,fn){return `<button onclick="${fn}">${t}</button>`}
-function openGame(i){
- clearInterval(timer);score=0;
- $("screen").style.display="block";
- $("gameTitle").textContent=(mode==="2d"?games2:games3)[i][1];
- msg("");html("");
- if(mode==="2d")start2d(i);else start3d(i);
+
+function choose(category){
+ currentCategory=category;
+ document.getElementById("tab2d").classList.toggle("active",category==="2d");
+ document.getElementById("tab3d").classList.toggle("active",category==="3d");
+ render();
 }
-function back(){clearInterval(timer);$("screen").style.display="none"}
+
+function openGame(index){
+ selectedGame=index;
+ document.getElementById("listView").style.display="none";
+ document.querySelector(".tabs").style.display="none";
+ document.getElementById("gameView").style.display="block";
+ if(currentCategory==="2d"){start2d(index)}
+ else{start3d(index)}
+}
+
+function html(content){
+ document.getElementById("gameContent").innerHTML=content;
+}
+
+function gameBox(title,content){
+ html(`<h2>${title}</h2>${content}`);
+}
+
 function start2d(i){
  const list=[snake,tap,reaction,guess,math,memory,ttt,rps,coin,dice,mole,color,odd,higher,typing,scramble,sequence,dodge,pong,brick,catchStar,g2048,lights,quick,target];
- list[i]();
-}
-// PART 2 CONTINUES HERE
-</script>
-</body>
-</html>
-
-// ===== PART 2: 2D GAMES =====
-
-function gameBox(title, content) {
-  html(`
-    <div class="game-box">
-      <h2>${title}</h2>
-      ${content}
-    </div>
-  `);
+ if(typeof list[i]==="function"){list[i]()}
+ else{gameBox("Game Error","Game not available")}
 }
 
-function snake() {
-  let score = 0;
-  gameBox("Snake Game", `
-    <p>Score: <span id="sc">0</span></p>
-    <canvas id="snakeCanvas" width="300" height="300"
-      style="background:#111;border:2px solid #00e5ff;max-width:100%"></canvas>
-    <p>
-      <button onclick="snakeMove(-1,0)">LEFT</button>
-      <button onclick="snakeMove(1,0)">RIGHT</button>
-      <button onclick="snakeMove(0,-1)">UP</button>
-      <button onclick="snakeMove(0,1)">DOWN</button>
-    </p>
-  `);
-  const c = document.getElementById("snakeCanvas");
-  const ctx = c.getContext("2d");
-  let body = [{x:5,y:5}], food = {x:10,y:10};
-  let dx=1,dy=0,over=false;
-  window.snakeMove=(x,y)=>{if(!over && !(x===-dx && y===-dy)){dx=x;dy=y;}};
-  function tick(){
-    if(over)return;
-    let h={x:body[0].x+dx,y:body[0].y+dy};
-    if(h.x<0||h.y<0||h.x>=15||h.y>=15||body.some(p=>p.x===h.x&&p.y===h.y)){
-      over=true; alert("Game over! Score: "+score); return;
-    }
-    body.unshift(h);
-    if(h.x===food.x&&h.y===food.y){
-      score++; document.getElementById("sc").textContent=score;
-      food={x:Math.floor(Math.random()*15),y:Math.floor(Math.random()*15)};
-    }else body.pop();
-    ctx.fillStyle="#111";ctx.fillRect(0,0,300,300);
-    ctx.fillStyle="#00e676";body.forEach(p=>ctx.fillRect(p.x*20,p.y*20,18,18));
-    ctx.fillStyle="red";ctx.fillRect(food.x*20,food.y*20,18,18);
+function back(){
+ document.getElementById("gameView").style.display="none";
+ document.getElementById("listView").style.display="block";
+ document.querySelector(".tabs").style.display="flex";
+ render();
+}
+
+render();
+
+
+===
+
+function snake(){
+ gameBox("Snake Game",`
+ <p>Score: <span id="snakeScore">0</span></p>
+ <canvas id="snakeCanvas" width="300" height="300" style="background:#080b16;max-width:100%"></canvas>
+ <p><button onclick="snakeDir(0,-1)">UP</button></p>
+ <button onclick="snakeDir(-1,0)">LEFT</button>
+ <button onclick="snakeDir(1,0)">RIGHT</button>
+ <p><button onclick="snakeDir(0,1)">DOWN</button></p>`);
+ let c=document.getElementById("snakeCanvas"),ctx=c.getContext("2d");
+ let body=[{x:7,y:7}],food={x:3,y:5},dx=1,dy=0,score=0,dead=false;
+ window.snakeDir=(x,y)=>{if(x!==-dx||y!==-dy){dx=x;dy=y}};
+ window.snakeTimer=setInterval(()=>{
+  if(dead)return;
+  let h={x:body[0].x+dx,y:body[0].y+dy};
+  if(h.x<0||h.y<0||h.x>=15||h.y>=15||body.some(p=>p.x===h.x&&p.y===h.y)){
+   dead=true;clearInterval(window.snakeTimer);alert("Game over! Score: "+score);return;
   }
-  window.snakeTimer=setInterval(tick,150);
+  body.unshift(h);
+  if(h.x===food.x&&h.y===food.y){score++;food={x:Math.floor(Math.random()*15),y:Math.floor(Math.random()*15)};document.getElementById("snakeScore").textContent=score}
+  else body.pop();
+  ctx.fillStyle="#080b16";ctx.fillRect(0,0,300,300);
+  ctx.fillStyle="#00e5ff";body.forEach(p=>ctx.fillRect(p.x*20,p.y*20,18,18));
+  ctx.fillStyle="red";ctx.fillRect(food.x*20,food.y*20,18,18);
+ },150);
 }
 
 function tap(){
-  let n=0;
-  gameBox("Tap Challenge",`<h1 id="tapScore">0</h1><button onclick="document.getElementById('tapScore').textContent=++window.tapN">TAP FAST!</button><p>Tap as many times as you can.</p>`);
-  window.tapN=0;
+ let n=0;
+ gameBox("Tap Challenge",`<h1 id="tapScore">0</h1><button onclick="tapAdd()">TAP FAST!</button><p>Tap as many times as you can.</p>`);
+ window.tapAdd=()=>document.getElementById("tapScore").textContent=++n;
 }
 
 function reaction(){
-  gameBox("Reaction Test",`
-    <p id="reactionText">Press START, then wait for green.</p>
-    <button onclick="reactionStart()">START</button>
-    <button onclick="reactionHit()">TAP!</button>
-  `);
-  window.reactionStart=()=>{
-    let el=document.getElementById("reactionText");
-    el.textContent="Wait...";
-    el.style.background="red";
-    window.reactionReady=false;
-    clearTimeout(window.reactTimer);
-    window.reactTimer=setTimeout(()=>{
-      window.reactionReady=true;
-      window.reactTime=Date.now();
-      el.textContent="NOW! TAP!";
-      el.style.background="green";
-    },1500+Math.random()*3000);
-  };
-  window.reactionHit=()=>{
-    let el=document.getElementById("reactionText");
-    if(!window.reactionReady){el.textContent="Too early! Try again.";clearTimeout(window.reactTimer);}
-    else{el.textContent="Your time: "+(Date.now()-window.reactTime)+" ms";window.reactionReady=false;}
-  };
+ gameBox("Reaction Test",`<h2 id="reactText">Press START</h2><button onclick="reactStart()">START</button><button onclick="reactHit()">TAP!</button>`);
+ window.reactStart=()=>{
+  let el=document.getElementById("reactText");el.textContent="Wait...";
+  el.style.background="red";window.reactReady=false;clearTimeout(window.reactTimer);
+  window.reactTimer=setTimeout(()=>{window.reactReady=true;window.reactTime=Date.now();el.textContent="TAP NOW!";el.style.background="green"},1500+Math.random()*3000);
+ };
+ window.reactHit=()=>{
+  let el=document.getElementById("reactText");
+  if(!window.reactReady){clearTimeout(window.reactTimer);el.textContent="Too early!";return}
+  el.textContent="Your time: "+(Date.now()-window.reactTime)+" ms";window.reactReady=false;
+ };
 }
 
 function guess(){
-  window.guessNumber=Math.ceil(Math.random()*20);
-  gameBox("Guess The Number",`
-    <p>Guess a number between 1 and 20.</p>
-    <input id="guessInput" type="number" min="1" max="20">
-    <button onclick="guessCheck()">CHECK</button>
-    <p id="guessResult"></p>
-  `);
-  window.guessCheck=()=>{
-    let n=Number(document.getElementById("guessInput").value);
-    document.getElementById("guessResult").textContent=
-      n===window.guessNumber?"Correct! You won!":
-      n<window.guessNumber?"Too low! Try higher.":"Too high! Try lower.";
-  };
+ window.guessN=Math.ceil(Math.random()*20);
+ gameBox("Guess The Number",`<p>Guess from 1 to 20</p><input id="guessInput" type="number"><button onclick="guessCheck()">CHECK</button><p id="guessResult"></p>`);
+ window.guessCheck=()=>{
+  let n=Number(document.getElementById("guessInput").value);
+  document.getElementById("guessResult").textContent=n===window.guessN?"You won!":n<window.guessN?"Too low!":"Too high!";
+ };
 }
 
 function math(){
-  let a=Math.ceil(Math.random()*20),b=Math.ceil(Math.random()*20);
-  window.mathAnswer=a+b;
-  gameBox("Math Challenge",`
-    <h1>${a} + ${b} = ?</h1>
-    <input id="mathInput" type="number">
-    <button onclick="mathCheck()">SUBMIT</button>
-    <p id="mathResult"></p>
-  `);
-  window.mathCheck=()=>{
-    document.getElementById("mathResult").textContent=
-      Number(document.getElementById("mathInput").value)===window.mathAnswer?"Correct!":"Try again!";
-  };
+ let a=Math.ceil(Math.random()*20),b=Math.ceil(Math.random()*20);
+ window.mathAnswer=a+b;
+ gameBox("Math Challenge",`<h1>${a} + ${b} = ?</h1><input id="mathInput" type="number"><button onclick="mathCheck()">CHECK</button><p id="mathResult"></p>`);
+ window.mathCheck=()=>document.getElementById("mathResult").textContent=Number(document.getElementById("mathInput").value)===window.mathAnswer?"Correct!":"Try again!";
 }
 
 function memory(){
-  let nums=Array.from({length:5},()=>Math.floor(Math.random()*9)+1);
-  window.memoryNums=nums.join("");
-  gameBox("Memory Test",`
-    <h2 id="memoryShow">${nums.join(" - ")}</h2>
-    <p>Remember the numbers!</p>
-    <button onclick="memoryHide()">HIDE NUMBERS</button>
-    <input id="memoryInput" placeholder="Enter numbers">
-    <button onclick="memoryCheck()">CHECK</button>
-    <p id="memoryResult"></p>
-  `);
-  window.memoryHide=()=>document.getElementById("memoryShow").textContent="???";
-  window.memoryCheck=()=>document.getElementById("memoryResult").textContent=
-    document.getElementById("memoryInput").value===window.memoryNums?"Excellent memory!":"Not quite. Try again!";
+ let nums=Array.from({length:5},()=>Math.floor(Math.random()*9)+1);
+ window.memoryAnswer=nums.join("");
+ gameBox("Memory Test",`<h2 id="memoryNums">${nums.join(" - ")}</h2><button onclick="memoryHide()">HIDE</button><input id="memoryInput" placeholder="Enter numbers"><button onclick="memoryCheck()">CHECK</button><p id="memoryResult"></p>`);
+ window.memoryHide=()=>document.getElementById("memoryNums").textContent="???";
+ window.memoryCheck=()=>document.getElementById("memoryResult").textContent=document.getElementById("memoryInput").value===window.memoryAnswer?"Correct!":"Try again!";
 }
 
 function ttt(){
-  let board=["","","","","","","","",""],turn="X";
-  gameBox("Tic Tac Toe",`
-    <h3 id="tttStatus">Turn: X</h3>
-    <div style="display:grid;grid-template-columns:repeat(3,75px);gap:5px">
-      ${board.map((_,i)=>`<button id="ttt${i}" style="height:70px;font-size:25px" onclick="tttPlay(${i})"></button>`).join("")}
-    </div>
-    <button onclick="ttt()">RESTART</button>
-  `);
-  window.tttPlay=(i)=>{
-    if(board[i]||!turn)return;
-    board[i]=turn;
-    document.getElementById("ttt"+i).textContent=turn;
-    let wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-    if(wins.some(w=>w.every(j=>board[j]===turn))){
-      document.getElementById("tttStatus").textContent=turn+" wins!";
-      turn="";return;
-    }
-    if(board.every(Boolean)){document.getElementById("tttStatus").textContent="Draw!";turn="";return;}
-    turn=turn==="X"?"O":"X";
-    document.getElementById("tttStatus").textContent="Turn: "+turn;
-  };
+ let b=Array(9).fill(""),turn="X";
+ gameBox("Tic Tac Toe",`<h3 id="tttStatus">Turn: X</h3><div style="display:grid;grid-template-columns:repeat(3,75px);gap:5px;justify-content:center">${b.map((v,i)=>`<button id="ttt${i}" style="height:70px;font-size:25px" onclick="tttPlay(${i})"></button>`).join("")}</div><button onclick="ttt()">RESTART</button>`);
+ window.tttPlay=i=>{
+  if(b[i]||!turn)return;b[i]=turn;document.getElementById("ttt"+i).textContent=turn;
+  let wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  if(wins.some(w=>w.every(j=>b[j]===turn))){document.getElementById("tttStatus").textContent=turn+" wins!";turn="";return}
+  if(b.every(Boolean)){document.getElementById("tttStatus").textContent="Draw!";turn="";return}
+  turn=turn==="X"?"O":"X";document.getElementById("tttStatus").textContent="Turn: "+turn;
+ };
 }
 
 function rps(){
-  gameBox("Rock Paper Scissors",`
-    <button onclick="rpsPlay('Rock')">ROCK</button>
-    <button onclick="rpsPlay('Paper')">PAPER</button>
-    <button onclick="rpsPlay('Scissors')">SCISSORS</button>
-    <h3 id="rpsResult">Choose one!</h3>
-  `);
-  window.rpsPlay=(you)=>{
-    let choices=["Rock","Paper","Scissors"],cpu=choices[Math.floor(Math.random()*3)];
-    let result=you===cpu?"Draw!":(
-      (you==="Rock"&&cpu==="Scissors")||
-      (you==="Paper"&&cpu==="Rock")||
-      (you==="Scissors"&&cpu==="Paper")?"You win!":"Computer wins!"
-    );
-    document.getElementById("rpsResult").textContent=`You: ${you} | Computer: ${cpu} | ${result}`;
-  };
+ gameBox("Rock Paper Scissors",`<button onclick="rpsPlay('Rock')">ROCK</button><button onclick="rpsPlay('Paper')">PAPER</button><button onclick="rpsPlay('Scissors')">SCISSORS</button><h3 id="rpsResult">Choose!</h3>`);
+ window.rpsPlay=you=>{
+  let a=["Rock","Paper","Scissors"],cpu=a[Math.floor(Math.random()*3)];
+  let result=you===cpu?"Draw":((you==="Rock"&&cpu==="Scissors")||(you==="Paper"&&cpu==="Rock")||(you==="Scissors"&&cpu==="Paper"))?"You win!":"Computer wins!";
+  document.getElementById("rpsResult").textContent="You: "+you+" | CPU: "+cpu+" | "+result;
+ };
 }
 
 function coin(){
-  gameBox("Coin Toss",`
-    <button onclick="coinFlip()">FLIP COIN</button>
-    <h1 id="coinResult">?</h1>
-  `);
-  window.coinFlip=()=>document.getElementById("coinResult").textContent=Math.random()<.5?"HEADS":"TAILS";
+ gameBox("Coin Toss",`<button onclick="coinFlip()">FLIP</button><h1 id="coinResult">?</h1>`);
+ window.coinFlip=()=>document.getElementById("coinResult").textContent=Math.random()<.5?"HEADS":"TAILS";
 }
 
 function dice(){
-  gameBox("Dice Roll",`
-    <button onclick="diceRoll()">ROLL DICE</button>
-    <h1 id="diceResult">🎲</h1>
-  `);
-  window.diceRoll=()=>document.getElementById("diceResult").textContent=Math.floor(Math.random()*6)+1;
+ gameBox("Dice Roll",`<button onclick="diceRoll()">ROLL DICE</button><h1 id="diceResult">?</h1>`);
+ window.diceRoll=()=>document.getElementById("diceResult").textContent=Math.floor(Math.random()*6)+1;
 }
 
 function mole(){
-  let score=0;
-  gameBox("Catch The Dot",`
-    <p>Score: <span id="moleScore">0</span></p>
-    <div id="moleArea" style="height:230px;background:#172033;position:relative">
-      <button id="moleDot" style="position:absolute" onclick="moleHit()">●</button>
-    </div>
-  `);
-  window.moleHit=()=>{
-    score++;
-    document.getElementById("moleScore").textContent=score;
-    let d=document.getElementById("moleDot");
-    d.style.left=Math.random()*85+"%";
-    d.style.top=Math.random()*80+"%";
-  };
+ let score=0;
+ gameBox("Catch The Dot",`<p>Score: <span id="moleScore">0</span></p><div style="height:220px;background:#10182c;position:relative"><button id="moleDot" style="position:absolute" onclick="moleHit()">●</button></div>`);
+ window.moleHit=()=>{
+  score++;document.getElementById("moleScore").textContent=score;
+  let d=document.getElementById("moleDot");d.style.left=Math.random()*85+"%";d.style.top=Math.random()*85+"%";
+ };
 }
 
 function color(){
-  let colors=["red","blue","green","yellow","purple"];
-  let target=colors[Math.floor(Math.random()*colors.length)];
-  gameBox("Color Match",`
-    <h2>Tap the ${target} button</h2>
-    ${colors.map(c=>`<button style="background:${c};color:white" onclick="colorCheck('${c}')">${c}</button>`).join("")}
-    <p id="colorResult"></p>
-  `);
-  window.colorCheck=(c)=>document.getElementById("colorResult").textContent=c===target?"Correct!":"Wrong! Try again.";
+ let colors=["red","blue","green","yellow","purple"],target=colors[Math.floor(Math.random()*5)];
+ gameBox("Color Match",`<h3>Tap ${target}</h3>${colors.map(c=>`<button style="background:${c};color:white" onclick="colorCheck('${c}')">${c}</button>`).join("")}<p id="colorResult"></p>`);
+ window.colorCheck=c=>document.getElementById("colorResult").textContent=c===target?"Correct!":"Try again!";
 }
 
 function odd(){
-  let nums=Array.from({length:9},()=>2);
-  let index=Math.floor(Math.random()*9);
-  nums[index]=3;
-  gameBox("Find The Odd Number",`
-    <div style="display:grid;grid-template-columns:repeat(3,70px);gap:6px">
-      ${nums.map((n,i)=>`<button style="height:65px;font-size:22px" onclick="oddCheck(${i})">${n}</button>`).join("")}
-    </div>
-    <p id="oddResult"></p>
-  `);
-  window.oddCheck=(i)=>document.getElementById("oddResult").textContent=i===index?"You found it!":"Try again!";
+ let nums=Array(9).fill(2),index=Math.floor(Math.random()*9);nums[index]=3;
+ gameBox("Find The Odd Number",`<div style="display:grid;grid-template-columns:repeat(3,65px);gap:5px;justify-content:center">${nums.map((n,i)=>`<button style="height:60px" onclick="oddCheck(${i})">${n}</button>`).join("")}</div><p id="oddResult"></p>`);
+ window.oddCheck=i=>document.getElementById("oddResult").textContent=i===index?"You found it!":"Try again!";
 }
 
-// PART 3 CONTINUES HERE
-   
-// ===== PART 3: REMAINING 2D GAMES =====
-
 function higher(){
-  let n=Math.floor(Math.random()*50)+1;
-  window.higherN=n;
-  gameBox("Higher or Lower",`
-    <h2 id="higherNum">${n}</h2>
-    <button onclick="higherGuess('higher')">HIGHER</button>
-    <button onclick="higherGuess('lower')">LOWER</button>
-    <p id="higherResult">Guess the next number!</p>
-  `);
-  window.higherGuess=(choice)=>{
-    let next=Math.floor(Math.random()*50)+1;
-    let correct=choice==="higher"?next>window.higherN:next<window.higherN;
-    document.getElementById("higherResult").textContent=correct?"Correct!":"Wrong! New round.";
-    document.getElementById("higherNum").textContent=next;
-    window.higherN=next;
-  };
+ let n=Math.ceil(Math.random()*50);window.higherN=n;
+ gameBox("Higher or Lower",`<h2 id="higherNum">${n}</h2><button onclick="higherGuess('higher')">HIGHER</button><button onclick="higherGuess('lower')">LOWER</button><p id="higherResult">Guess next number</p>`);
+ window.higherGuess=choice=>{
+  let next=Math.ceil(Math.random()*50),ok=choice==="higher"?next>window.higherN:next<window.higherN;
+  document.getElementById("higherResult").textContent=ok?"Correct!":"Wrong!";
+  document.getElementById("higherNum").textContent=next;window.higherN=next;
+ };
 }
 
 function typing(){
-  let words=["gaming","computer","javascript","website","keyboard"];
-  let word=words[Math.floor(Math.random()*words.length)];
-  gameBox("Typing Challenge",`
-    <h2>${word}</h2>
-    <input id="typingInput" placeholder="Type the word">
-    <button onclick="typingCheck()">CHECK</button>
-    <p id="typingResult"></p>
-  `);
-  window.typingCheck=()=>document.getElementById("typingResult").textContent=
-    document.getElementById("typingInput").value===word?"Perfect typing!":"Try again!";
+ let word=["gaming","computer","javascript","website","keyboard"][Math.floor(Math.random()*5)];
+ gameBox("Typing Challenge",`<h2>${word}</h2><input id="typingInput"><button onclick="typingCheck()">CHECK</button><p id="typingResult"></p>`);
+ window.typingCheck=()=>document.getElementById("typingResult").textContent=document.getElementById("typingInput").value===word?"Perfect!":"Try again!";
 }
 
 function scramble(){
-  let words=["APPLE","GAMING","PHONE","COMPUTER","SNAKE"];
-  let word=words[Math.floor(Math.random()*words.length)];
-  let mixed=word.split("").sort(()=>Math.random()-.5).join("");
-  gameBox("Word Scramble",`
-    <h2>${mixed}</h2>
-    <input id="scrambleInput" placeholder="Guess the word">
-    <button onclick="scrambleCheck()">CHECK</button>
-    <p id="scrambleResult"></p>
-  `);
-  window.scrambleCheck=()=>document.getElementById("scrambleResult").textContent=
-    document.getElementById("scrambleInput").value.toUpperCase()===word?"Correct!":"Try again!";
+ let word=["APPLE","GAMING","PHONE","COMPUTER","SNAKE"][Math.floor(Math.random()*5)];
+ let mixed=word.split("").sort(()=>Math.random()-.5).join("");
+ gameBox("Word Scramble",`<h2>${mixed}</h2><input id="scrambleInput"><button onclick="scrambleCheck()">CHECK</button><p id="scrambleResult"></p>`);
+ window.scrambleCheck=()=>document.getElementById("scrambleResult").textContent=document.getElementById("scrambleInput").value.toUpperCase()===word?"Correct!":"Try again!";
 }
 
 function sequence(){
-  let seq=Array.from({length:5},()=>Math.floor(Math.random()*9)+1);
-  gameBox("Number Sequence",`
-    <h2>${seq.join(" - ")}</h2>
-    <p>What is the next number?</p>
-    <input id="sequenceInput" type="number">
-    <button onclick="sequenceCheck()">CHECK</button>
-    <p id="sequenceResult"></p>
-  `);
-  window.sequenceCheck=()=>document.getElementById("sequenceResult").textContent=
-    Number(document.getElementById("sequenceInput").value)===seq[4]+1?"Correct!":"Try again!";
+ let n=Math.floor(Math.random()*20)+1;
+ gameBox("Number Sequence",`<h2>${n} - ${n+1} - ${n+2} - ?</h2><input id="seqInput" type="number"><button onclick="seqCheck()">CHECK</button><p id="seqResult"></p>`);
+ window.seqCheck=()=>document.getElementById("seqResult").textContent=Number(document.getElementById("seqInput").value)===n+3?"Correct!":"Try again!";
 }
 
 function dodge(){
-  let score=0;
-  gameBox("Dodge Game",`
-    <p>Score: <span id="dodgeScore">0</span></p>
-    <div id="dodgeArea" style="height:250px;background:#111;position:relative;overflow:hidden">
-      <div id="dodgePlayer" style="position:absolute;bottom:8px;left:45%;width:30px;height:30px;background:#00e5ff"></div>
-      <div id="dodgeEnemy" style="position:absolute;top:0;left:45%;width:30px;height:30px;background:red"></div>
-    </div>
-    <button onclick="dodgeMove(-1)">LEFT</button>
-    <button onclick="dodgeMove(1)">RIGHT</button>
-  `);
-  let x=45,y=0,enemyX=45,over=false;
-  window.dodgeMove=(d)=>{x=Math.max(0,Math.min(90,x+d*8));document.getElementById("dodgePlayer").style.left=x+"%";};
-  window.dodgeTimer=setInterval(()=>{
-    if(over)return;
-    y+=5;
-    if(y>90){y=0;enemyX=Math.random()*90;score++;document.getElementById("dodgeScore").textContent=score;}
-    let e=document.getElementById("dodgeEnemy");
-    if(!e)return;
-    e.style.top=y+"%";e.style.left=enemyX+"%";
-    if(y>80&&Math.abs(x-enemyX)<12){
-      over=true;clearInterval(window.dodgeTimer);alert("Game Over! Score: "+score);
-    }
-  },100);
+ gameBox("Dodge Game",`<canvas id="dodgeCanvas" width="300" height="300" style="background:#10182c;max-width:100%"></canvas><p><button onclick="dodgeMove(-1)">LEFT</button><button onclick="dodgeMove(1)">RIGHT</button></p><p>Score: <span id="dodgeScore">0</span></p>`);
+ let c=document.getElementById("dodgeCanvas"),ctx=c.getContext("2d"),x=140,y=0,px=135,score=0,over=false;
+ window.dodgeMove=d=>px=Math.max(0,Math.min(270,px+d*25));
+ window.dodgeTimer=setInterval(()=>{
+  if(over)return;y+=5;if(y>300){y=0;x=Math.random()*270;score++;document.getElementById("dodgeScore").textContent=score}
+  if(y>255&&Math.abs(px-x)<25){over=true;clearInterval(window.dodgeTimer);alert("Game over! Score: "+score)}
+  ctx.clearRect(0,0,300,300);ctx.fillStyle="red";ctx.fillRect(x,y,25,25);ctx.fillStyle="#00e5ff";ctx.fillRect(px,270,30,25);
+ },40);
 }
 
 function pong(){
-  gameBox("Pong Mini",`
-    <canvas id="pongCanvas" width="300" height="220" style="background:#111;max-width:100%"></canvas>
-    <p><button onclick="pongMove(-1)">LEFT</button> <button onclick="pongMove(1)">RIGHT</button></p>
-    <p id="pongScore">Score: 0</p>
-  `);
-  let c=document.getElementById("pongCanvas"),ctx=c.getContext("2d");
-  let x=130,bx=100,by=80,vx=3,vy=3,score=0,over=false;
-  window.pongMove=d=>x=Math.max(0,Math.min(250,x+d*18));
-  window.pongTimer=setInterval(()=>{
-    if(over)return;
-    bx+=vx;by+=vy;
-    if(bx<0||bx>290)vx=-vx;
-    if(by<0)vy=-vy;
-    if(by>195&&bx>x&&bx<x+50){vy=-Math.abs(vy);score++;document.getElementById("pongScore").textContent="Score: "+score;}
-    if(by>220){over=true;clearInterval(window.pongTimer);alert("Game over! Score: "+score);}
-    ctx.clearRect(0,0,300,220);
-    ctx.fillStyle="white";ctx.fillRect(x,205,50,8);
-    ctx.beginPath();ctx.arc(bx,by,7,0,Math.PI*2);ctx.fill();
-  },30);
+ gameBox("Pong Mini",`<canvas id="pongCanvas" width="300" height="220" style="background:#10182c;max-width:100%"></canvas><p><button onclick="pongMove(-1)">LEFT</button><button onclick="pongMove(1)">RIGHT</button></p><p id="pongScore">Score: 0</p>`);
+ let c=document.getElementById("pongCanvas"),ctx=c.getContext("2d"),x=125,bx=100,by=80,vx=3,vy=3,score=0,over=false;
+ window.pongMove=d=>x=Math.max(0,Math.min(250,x+d*20));
+ window.pongTimer=setInterval(()=>{
+  if(over)return;bx+=vx;by+=vy;if(bx<5||bx>295)vx=-vx;if(by<5)vy=-vy;
+  if(by>195&&bx>x&&bx<x+50){vy=-Math.abs(vy);score++;document.getElementById("pongScore").textContent="Score: "+score}
+  if(by>220){over=true;clearInterval(window.pongTimer);alert("Game over!")}
+  ctx.clearRect(0,0,300,220);ctx.fillStyle="white";ctx.fillRect(x,205,50,8);ctx.beginPath();ctx.arc(bx,by,7,0,7);ctx.fill();
+ },30);
 }
 
 function brick(){
-  let score=0;
-  gameBox("Brick Breaker",`
-    <canvas id="brickCanvas" width="300" height="300" style="background:#111;max-width:100%"></canvas>
-    <p>Move paddle: <button onclick="brickMove(-1)">LEFT</button> <button onclick="brickMove(1)">RIGHT</button></p>
-    <p id="brickScore">Score: 0</p>
-  `);
-  let c=document.getElementById("brickCanvas"),ctx=c.getContext("2d");
-  let x=120,bx=150,by=220,vx=3,vy=-3,bricks=Array.from({length:15},(_,i)=>({x:(i%5)*58+5,y:Math.floor(i/5)*25+20,on:true})),over=false;
-  window.brickMove=d=>x=Math.max(0,Math.min(250,x+d*20));
-  window.brickTimer=setInterval(()=>{
-    if(over)return;
-    bx+=vx;by+=vy;
-    if(bx<5||bx>295)vx=-vx;
-    if(by<5)vy=-vy;
-    if(by>270&&bx>x&&bx<x+50)vy=-Math.abs(vy);
-    bricks.forEach(b=>{if(b.on&&bx>b.x&&bx<b.x+50&&by>b.y&&by<b.y+18){b.on=false;vy=-vy;score++;document.getElementById("brickScore").textContent="Score: "+score;}});
-    if(by>300||bricks.every(b=>!b.on)){over=true;clearInterval(window.brickTimer);alert("Game finished! Score: "+score);}
-    ctx.clearRect(0,0,300,300);
-    ctx.fillStyle="white";ctx.fillRect(x,280,50,8);
-    ctx.beginPath();ctx.arc(bx,by,6,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle="#00e5ff";bricks.forEach(b=>{if(b.on)ctx.fillRect(b.x,b.y,50,18);});
-  },30);
+ gameBox("Brick Breaker",`<canvas id="brickCanvas" width="300" height="300" style="background:#10182c;max-width:100%"></canvas><p><button onclick="brickMove(-1)">LEFT</button><button onclick="brickMove(1)">RIGHT</button></p><p id="brickScore">Score: 0</p>`);
+ let c=document.getElementById("brickCanvas"),ctx=c.getContext("2d"),x=120,bx=150,by=220,vx=3,vy=-3,score=0,bricks=Array.from({length:15},(_,i)=>({x:(i%5)*58+5,y:Math.floor(i/5)*25+20,on:true})),over=false;
+ window.brickMove=d=>x=Math.max(0,Math.min(250,x+d*20));
+ window.brickTimer=setInterval(()=>{
+  if(over)return;bx+=vx;by+=vy;if(bx<5||bx>295)vx=-vx;if(by<5)vy=-vy;
+  if(by>270&&bx>x&&bx<x+50)vy=-Math.abs(vy);
+  bricks.forEach(b=>{if(b.on&&bx>b.x&&bx<b.x+50&&by>b.y&&by<b.y+18){b.on=false;vy=-vy;score++;document.getElementById("brickScore").textContent="Score: "+score}});
+  if(by>300||bricks.every(b=>!b.on)){over=true;clearInterval(window.brickTimer);alert("Finished! Score: "+score)}
+  ctx.clearRect(0,0,300,300);ctx.fillStyle="white";ctx.fillRect(x,280,50,8);ctx.beginPath();ctx.arc(bx,by,6,0,7);ctx.fill();ctx.fillStyle="#00e5ff";bricks.forEach(b=>{if(b.on)ctx.fillRect(b.x,b.y,50,18)});
+ },30);
 }
 
 function catchStar(){
-  let score=0;
-  gameBox("Catch The Star",`
-    <h2>Score: <span id="starScore">0</span></h2>
-    <div id="starArea" style="height:230px;background:#10182c;position:relative">
-      <button id="star" onclick="starCatch()" style="position:absolute">★</button>
-    </div>
-  `);
-  window.starCatch=()=>{
-    score++;document.getElementById("starScore").textContent=score;
-    let s=document.getElementById("star");
-    s.style.left=Math.random()*85+"%";s.style.top=Math.random()*85+"%";
-  };
+ let score=0;
+ gameBox("Catch The Star",`<p>Score: <span id="starScore">0</span></p><div style="height:220px;background:#10182c;position:relative"><button id="starDot" style="position:absolute" onclick="starHit()">★</button></div>`);
+ window.starHit=()=>{score++;document.getElementById("starScore").textContent=score;let d=document.getElementById("starDot");d.style.left=Math.random()*85+"%";d.style.top=Math.random()*85+"%"};
 }
 
 function g2048(){
-  let b=Array(16).fill(0);b[5]=2;
-  gameBox("2048 Mini",`
-    <div id="board2048" style="display:grid;grid-template-columns:repeat(4,60px);gap:5px"></div>
-    <p>Use arrow buttons to move tiles.</p>
-    <button onclick="move2048('left')">LEFT</button>
-    <button onclick="move2048('right')">RIGHT</button>
-    <button onclick="move2048('up')">UP</button>
-    <button onclick="move2048('down')">DOWN</button>
-  `);
-  function draw(){
-    document.getElementById("board2048").innerHTML=b.map(v=>`<div style="height:55px;background:#26334d;display:grid;place-items:center;font-size:20px">${v||""}</div>`).join("");
+ let b=Array(16).fill(0);b[5]=2;
+ gameBox("2048 Mini",`<div id="board2048" style="display:grid;grid-template-columns:repeat(4,55px);gap:5px;justify-content:center"></div><p><button onclick="move2048('left')">LEFT</button><button onclick="move2048('right')">RIGHT</button><button onclick="move2048('up')">UP</button><button onclick="move2048('down')">DOWN</button></p>`);
+ function draw(){document.getElementById("board2048").innerHTML=b.map(v=>`<div style="height:55px;background:#26334d;display:grid;place-items:center;font-size:20px">${v||""}</div>`).join("")}
+ window.move2048=dir=>{
+  for(let r=0;r<4;r++){
+   let ids=dir==="left"||dir==="right"?Array.from({length:4},(_,i)=>r*4+(dir==="left"?i:3-i)):Array.from({length:4},(_,i)=>(dir==="up"?i:3-i)*4+r);
+   let vals=ids.map(i=>b[i]).filter(Boolean);
+   for(let i=0;i<vals.length-1;i++){if(vals[i]===vals[i+1]){vals[i]*=2;vals.splice(i+1,1)}}
+   while(vals.length<4)vals.push(0);ids.forEach((id,i)=>b[id]=vals[i]);
   }
-  window.move2048=(dir)=>{
-    for(let r=0;r<4;r++){
-      let ids=dir==="left"||dir==="right"?Array.from({length:4},(_,i)=>r*4+(dir==="left"?i:3-i)):Array.from({length:4},(_,i)=>(dir==="up"?i:3-i)*4+r);
-      let vals=ids.map(i=>b[i]).filter(Boolean);
-      for(let i=0;i<vals.length-1;i++){if(vals[i]===vals[i+1]){vals[i]*=2;vals.splice(i+1,1);}}
-      while(vals.length<4)vals.push(0);
-      ids.forEach((id,i)=>b[id]=vals[i]);
-    }
-    let empty=b.map((v,i)=>v===0?i:-1).filter(i=>i>=0);
-    if(empty.length)b[empty[Math.floor(Math.random()*empty.length)]]=2;
-    draw();
-  };
-  draw();
+  let e=b.map((v,i)=>v===0?i:-1).filter(i=>i>=0);if(e.length)b[e[Math.floor(Math.random()*e.length)]]=2;draw();
+ };
+ draw();
 }
 
 function lights(){
-  let on=Array(9).fill(false);
-  gameBox("Lights Puzzle",`
-    <div id="lightsGrid" style="display:grid;grid-template-columns:repeat(3,65px);gap:5px"></div>
-    <p>Turn all lights off!</p>
-  `);
-  window.lightPress=(i)=>{
-    [i, i-3, i+3, i%3?i-1:-1, i%3!==2?i+1:-1].forEach(j=>{if(j>=0&&j<9)on[j]=!on[j];});
-    drawLights();
-  };
-  function drawLights(){
-    document.getElementById("lightsGrid").innerHTML=on.map((v,i)=>`<button style="height:60px;background:${v?"#ffdf45":"#26334d"}" onclick="lightPress(${i})">${v?"ON":"OFF"}</button>`).join("");
-  }
-  on[1]=true;on[3]=true;on[5]=true;drawLights();
+ let on=Array(9).fill(false);
+ gameBox("Lights Puzzle",`<div id="lightsGrid" style="display:grid;grid-template-columns:repeat(3,65px);gap:5px;justify-content:center"></div><p>Turn all lights off!</p>`);
+ window.lightPress=i=>{[i,i-3,i+3,i%3?i-1:-1,i%3!==2?i+1:-1].forEach(j=>{if(j>=0&&j<9)on[j]=!on[j]});draw()};
+ function draw(){document.getElementById("lightsGrid").innerHTML=on.map((v,i)=>`<button style="height:60px;background:${v?"#ffdf45":"#26334d"}" onclick="lightPress(${i})">${v?"ON":"OFF"}</button>`).join("")}
+ on[1]=on[3]=on[5]=true;draw();
 }
 
 function quick(){
-  let n=0;
-  gameBox("Quick Click",`
-    <h2 id="quickScore">0</h2>
-    <button onclick="quickAdd()">CLICK!</button>
-    <p>How high can you score?</p>
-  `);
-  window.quickAdd=()=>document.getElementById("quickScore").textContent=++n;
+ let n=0;
+ gameBox("Quick Click",`<h1 id="quickScore">0</h1><button onclick="quickAdd()">CLICK!</button>`);
+ window.quickAdd=()=>document.getElementById("quickScore").textContent=++n;
 }
 
 function target(){
-  let score=0;
-  gameBox("Target Practice",`
-    <p>Score: <span id="targetScore">0</span></p>
-    <div style="height:230px;background:#172033;position:relative" id="targetArea">
-      <button id="targetDot" onclick="targetHit()" style="position:absolute">●</button>
-    </div>
-  `);
-  window.targetHit=()=>{
-    score++;document.getElementById("targetScore").textContent=score;
-    let d=document.getElementById("targetDot");
-    d.style.left=Math.random()*85+"%";d.style.top=Math.random()*85+"%";
-  };
+ let score=0;
+ gameBox("Target Practice",`<p>Score: <span id="targetScore">0</span></p><div style="height:220px;background:#10182c;position:relative"><button id="targetDot" style="position:absolute" onclick="targetHit()">●</button></div>`);
+ window.targetHit=()=>{score++;document.getElementById("targetScore").textContent=score;let d=document.getElementById("targetDot");d.style.left=Math.random()*85+"%";d.style.top=Math.random()*85+"%"};
 }
 
-// ===== SIMPLE 3D-STYLE RUNNER =====
 
 function start3d(i){
-  const names=games3;
-  const game=names[i]||"3D Runner";
-  gameBox(game,`
-    <p>3D-style runner demo — avoid the blocks!</p>
-    <canvas id="threeCanvas" width="340" height="420"
-      style="width:100%;max-width:340px;background:#101a35;border:2px solid #00e5ff"></canvas>
-    <p>
-      <button onclick="runnerMove(-1)">LEFT</button>
-      <button onclick="runnerMove(1)">RIGHT</button>
-      <button onclick="runnerJump()">JUMP</button>
-    </p>
-    <p>Score: <span id="runnerScore">0</span></p>
-  `);
-  let c=document.getElementById("threeCanvas"),ctx=c.getContext("2d");
-  let lane=1,obstacles=[],score=0,over=false,jump=0;
-  window.runnerMove=d=>lane=Math.max(0,Math.min(2,lane+d));
-  window.runnerJump=()=>{if(jump===0)jump=70;};
-  function frame(){
-    if(over)return;
-    ctx.clearRect(0,0,340,420);
-    ctx.fillStyle="#18284b";ctx.fillRect(0,0,340,420);
-    ctx.fillStyle="#354567";
-    ctx.beginPath();ctx.moveTo(95,0);ctx.lineTo(245,0);ctx.lineTo(340,420);ctx.lineTo(0,420);ctx.fill();
-    ctx.strokeStyle="#fff";ctx.setLineDash([15,15]);ctx.beginPath();
-    ctx.moveTo(145,0);ctx.lineTo(115,420);ctx.moveTo(195,0);ctx.lineTo(225,420);ctx.stroke();ctx.setLineDash([]);
-    if(Math.random()<.025)obstacles.push({lane:Math.floor(Math.random()*3),z:0});
-    obstacles.forEach(o=>o.z+=3);
-    obstacles=obstacles.filter(o=>o.z<430);
-    obstacles.forEach(o=>{
-      let y=o.z, size=12+y*.16, x=170+(o.lane-1)*((y/420)*120+10);
-      ctx.fillStyle="#ff4545";ctx.fillRect(x-size/2,y,size,size);
-      if(y>350&&y<410&&o.lane===lane&&jump<30){
-        over=true;clearInterval(window.runnerTimer);
-        alert("Game Over! Score: "+score);
-      }
-    });
-    if(jump>0)jump-=5;
-    let px=170+(lane-1)*70,py=365-jump;
-    ctx.fillStyle="#00e5ff";ctx.fillRect(px-15,py,30,42);
-    score++;
-    document.getElementById("runnerScore").textContent=Math.floor(score/10);
+ const gameName=games3[i]||"3D Runner";
+
+ gameBox(gameName,`
+  <h3>${gameName}</h3>
+  <p>3D-style endless runner</p>
+  <canvas id="world3d" width="340" height="420"
+    style="width:100%;max-width:340px;background:#101a35;border:2px solid #00e5ff;border-radius:10px">
+  </canvas>
+  <h3>Score: <span id="worldScore">0</span></h3>
+  <p>
+   <button onclick="worldMove(-1)">LEFT</button>
+   <button onclick="worldMove(1)">RIGHT</button>
+   <button onclick="worldJump()">JUMP</button>
+  </p>
+  <p>Use buttons to avoid the red blocks.</p>
+ `);
+
+ const canvas=document.getElementById("world3d");
+ const ctx=canvas.getContext("2d");
+
+ let lane=1;
+ let obstacles=[];
+ let score=0;
+ let jump=0;
+ let finished=false;
+ let frame=0;
+
+ window.worldMove=(direction)=>{
+  lane=Math.max(0,Math.min(2,lane+direction));
+ };
+
+ window.worldJump=()=>{
+  if(jump===0)jump=90;
+ };
+
+ function drawRoad(){
+  ctx.fillStyle="#101a35";
+  ctx.fillRect(0,0,340,420);
+
+  ctx.fillStyle="#354567";
+  ctx.beginPath();
+  ctx.moveTo(105,0);
+  ctx.lineTo(235,0);
+  ctx.lineTo(340,420);
+  ctx.lineTo(0,420);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle="#ffffff";
+  ctx.lineWidth=2;
+  ctx.setLineDash([15,15]);
+
+  ctx.beginPath();
+  ctx.moveTo(150,0);
+  ctx.lineTo(115,420);
+  ctx.moveTo(190,0);
+  ctx.lineTo(225,420);
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+ }
+
+ function drawPlayer(){
+  let x=170+(lane-1)*70;
+  let y=355-jump;
+
+  ctx.fillStyle="#00e5ff";
+  ctx.fillRect(x-15,y,30,42);
+
+  ctx.fillStyle="#ffffff";
+  ctx.fillRect(x-8,y+8,6,6);
+  ctx.fillRect(x+3,y+8,6,6);
+ }
+
+ function drawObstacles(){
+  obstacles.forEach(o=>{
+   let depth=o.depth;
+   let size=12+depth*.17;
+   let y=depth;
+   let x=170+(o.lane-1)*(10+depth*.17);
+
+   ctx.fillStyle="#ff4141";
+   ctx.fillRect(x-size/2,y,size,size);
+
+   if(y>340&&y<405&&o.lane===lane&&jump<35){
+    finished=true;
+    clearInterval(window.worldTimer);
+    alert("Game Over! Score: "+Math.floor(score/10));
+   }
+  });
+ }
+
+ function update(){
+  if(finished)return;
+
+  frame++;
+
+  drawRoad();
+
+  if(frame%45===0){
+   obstacles.push({
+    lane:Math.floor(Math.random()*3),
+    depth:0
+   });
   }
-  clearInterval(window.runnerTimer);
-  window.runnerTimer=setInterval(frame,40);
+
+  obstacles.forEach(o=>o.depth+=3);
+  obstacles=obstacles.filter(o=>o.depth<430);
+
+  drawObstacles();
+  drawPlayer();
+
+  if(jump>0)jump-=6;
+
+  score++;
+  document.getElementById("worldScore").textContent=Math.floor(score/10);
+ }
+
+ clearInterval(window.worldTimer);
+ window.worldTimer=setInterval(update,40);
 }
 
-// ===== CLEANUP WHEN EXITING GAME =====
-const oldBack = back;
-back = function(){
-  clearInterval(window.snakeTimer);
-  clearInterval(window.dodgeTimer);
-  clearInterval(window.pongTimer);
-  clearInterval(window.brickTimer);
-  clearInterval(window.runnerTimer);
-  clearTimeout(window.reactTimer);
-  oldBack();
+// ===== STOP RUNNING GAMES WHEN EXITING =====
+
+const originalBack=back;
+
+back=function(){
+ clearInterval(window.snakeTimer);
+ clearInterval(window.dodgeTimer);
+ clearInterval(window.pongTimer);
+ clearInterval(window.brickTimer);
+ clearInterval(window.worldTimer);
+ clearTimeout(window.reactTimer);
+
+ originalBack();
 };
 
-// ===== END PART 3 =====
-       
+// ===== FINAL INITIALIZATION =====
+
+render();
+
+// ===== END OF ZIYAN GAMING CODE =====
+ 
+
+ 
+</script>
+</body>
+</html>
