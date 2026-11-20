@@ -8,28 +8,26 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#080b16;color:white;font-family:Arial}
-header{padding:24px 15px;text-align:center;background:#11172c;border-bottom:2px solid #7654ff}
+header{text-align:center;padding:25px;background:#11172c;border-bottom:2px solid #7654ff}
 header h1{color:#a78bfa;margin:0;font-size:30px}
-header p{color:#aaa;margin-bottom:0}
-.search{padding:18px;text-align:center}
-input{width:95%;max-width:550px;padding:14px;border-radius:12px;border:1px solid #7654ff;background:#171d35;color:white;font-size:16px}
-.categories{display:flex;gap:9px;padding:12px;overflow-x:auto}
-.categories button{background:#202844;color:white;border:0;border-radius:25px;padding:12px 18px;white-space:nowrap}
-.categories button.active{background:#7654ff}
-h2{padding-left:15px}
+header p{color:#aaa}
+.search{text-align:center;padding:18px}
+input{width:95%;max-width:550px;padding:14px;border-radius:12px;background:#171d35;color:white;border:1px solid #7654ff}
+.categories{display:flex;gap:9px;padding:12px;overflow:auto}
+.categories button,.game button,.back,#start{background:#7654ff;color:white;border:0;border-radius:9px;padding:12px}
+.categories button{white-space:nowrap}
 .games{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
 .game{background:#171d30;border-radius:13px;overflow:hidden;border:1px solid #303856}
 .game img{width:100%;height:120px;object-fit:cover}
-.game h3{font-size:15px;margin:10px}
-.game button{width:calc(100% - 20px);margin:0 10px 12px;padding:11px;background:#7654ff;color:white;border:0;border-radius:8px;font-weight:bold}
-#player{display:none;padding:15px}
-#player iframe{width:100%;height:65vh;border:0;border-radius:12px;background:black}
-.back{padding:12px 18px;background:#7654ff;color:white;border:0;border-radius:8px;margin-bottom:12px}
+.game h3{margin:10px;font-size:15px}
+.game button{width:calc(100% - 20px);margin:0 10px 12px}
+#player{display:none;padding:15px;text-align:center}
+canvas{background:#050505;width:100%;max-width:400px;border:2px solid #7654ff;border-radius:10px}
+#score{font-size:20px}
 footer{text-align:center;padding:25px;color:#888}
 </style>
 </head>
 <body>
-
 <header>
 <h1>ZIYAN GAMING</h1>
 <p>YOUR ULTIMATE GAMING WORLD</p>
@@ -39,82 +37,111 @@ footer{text-align:center;padding:25px;color:#888}
 <div class="search">
 <input id="search" placeholder="Search your favourite game..." oninput="render()">
 </div>
-
 <div class="categories">
-<button class="active" onclick="setCategory('All',this)">All Games</button>
-<button onclick="setCategory('Racing',this)">Racing</button>
-<button onclick="setCategory('Action',this)">Action</button>
-<button onclick="setCategory('Sports',this)">Sports</button>
-<button onclick="setCategory('Adventure',this)">Adventure</button>
+<button onclick="setCategory('All')">All Games</button>
+<button onclick="setCategory('Arcade')">Arcade</button>
+<button onclick="setCategory('Racing')">Racing</button>
+<button onclick="setCategory('Action')">Action</button>
 </div>
-
-<h2>Explore Games</h2>
+<h2 style="padding-left:15px">Explore Games</h2>
 <div class="games" id="games"></div>
 </div>
 
 <div id="player">
 <button class="back" onclick="closeGame()">← Back to Games</button>
-<h2 id="gameTitle">Game Player</h2>
-<iframe id="gameFrame" allowfullscreen></iframe>
-<p id="gameMessage">Loading game...</p>
+<h2 id="gameTitle">Snake Game</h2>
+<p id="score">Score: 0</p>
+<canvas id="board" width="320" height="320"></canvas>
+<p><button id="start" onclick="startGame()">START GAME</button></p>
+<p>Use arrow keys or buttons to move</p>
+<div>
+<button onclick="move(0,-1)">↑</button><br>
+<button onclick="move(-1,0)">←</button>
+<button onclick="move(0,1)">↓</button>
+<button onclick="move(1,0)">→</button>
+</div>
 </div>
 
 <footer>© 2026 ZIYAN GAMING</footer>
 
 <script>
 const games=[
-{name:"Subway Surfers",cat:"Action",img:"https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500",url:""},
-{name:"Temple Run",cat:"Adventure",img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500",url:""},
-{name:"Car Racing",cat:"Racing",img:"https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=500",url:""},
-{name:"Football",cat:"Sports",img:"https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=500",url:""},
-{name:"Space Adventure",cat:"Adventure",img:"https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=500",url:""},
-{name:"Bike Racing",cat:"Racing",img:"https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=500",url:""},
-{name:"Action Arena",cat:"Action",img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500",url:""},
-{name:"Basketball",cat:"Sports",img:"https://images.unsplash.com/photo-1519861531473-9200262188bf?w=500",url:""}
+{name:"Snake Game",cat:"Arcade",img:"https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500"},
+{name:"Car Racing",cat:"Racing",img:"https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=500"},
+{name:"Space Game",cat:"Action",img:"https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=500"},
+{name:"Arcade Fun",cat:"Arcade",img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500"}
 ];
-
 let category="All";
-
-function setCategory(c,b){
-category=c;
-document.querySelectorAll(".categories button").forEach(x=>x.classList.remove("active"));
-b.classList.add("active");
-render();
-}
-
 function render(){
 let q=document.getElementById("search").value.toLowerCase();
-let filtered=games.filter(g=>(category==="All"||g.cat===category)&&g.name.toLowerCase().includes(q));
-
-document.getElementById("games").innerHTML=filtered.map((g,i)=>`
+let list=games.filter(g=>(category==="All"||g.cat===category)&&g.name.toLowerCase().includes(q));
+document.getElementById("games").innerHTML=list.map(g=>`
 <div class="game">
-<img src="${g.img}" alt="${g.name}">
+<img src="${g.img}">
 <h3>${g.name}</h3>
-<button onclick="openGame(${games.indexOf(g)})">PLAY NOW</button>
+<button onclick="openGame('${g.name}')">PLAY NOW</button>
 </div>`).join("");
 }
-
-function openGame(i){
-let g=games[i];
+function setCategory(c){category=c;render()}
+function openGame(name){
 document.getElementById("home").style.display="none";
 document.getElementById("player").style.display="block";
-document.getElementById("gameTitle").innerText=g.name;
-
-if(g.url){
-document.getElementById("gameFrame").src=g.url;
-document.getElementById("gameMessage").innerText="Enjoy your game!";
-}else{
-document.getElementById("gameFrame").src="about:blank";
-document.getElementById("gameMessage").innerText="Game coming soon! Authorized game link will be added here.";
+document.getElementById("gameTitle").innerText=name;
+resetGame();
 }
-}
-
 function closeGame(){
-document.getElementById("gameFrame").src="about:blank";
+stopGame();
 document.getElementById("player").style.display="none";
 document.getElementById("home").style.display="block";
 }
-
+const canvas=document.getElementById("board");
+const ctx=canvas.getContext("2d");
+let snake,food,dx,dy,score,timer;
+function resetGame(){
+stopGame();
+snake=[{x:8,y:8}];
+food={x:14,y:14};
+dx=1;dy=0;score=0;
+draw();
+document.getElementById("score").innerText="Score: 0";
+}
+function draw(){
+ctx.fillStyle="#050505";
+ctx.fillRect(0,0,320,320);
+ctx.fillStyle="#35e879";
+snake.forEach(p=>ctx.fillRect(p.x*16,p.y*16,14,14));
+ctx.fillStyle="#ff4545";
+ctx.fillRect(food.x*16,food.y*16,14,14);
+}
+function move(x,y){
+if(x!==-dx||y!==-dy){dx=x;dy=y;}
+}
+function startGame(){
+resetGame();
+timer=setInterval(()=>{
+let head={x:snake[0].x+dx,y:snake[0].y+dy};
+if(head.x<0||head.x>=20||head.y<0||head.y>=20||
+snake.some(p=>p.x===head.x&&p.y===head.y)){
+stopGame();
+alert("Game Over! Score: "+score);
+return;
+}
+snake.unshift(head);
+if(head.x===food.x&&head.y===food.y){
+score+=10;
+document.getElementById("score").innerText="Score: "+score;
+food={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};
+}else{snake.pop()}
+draw();
+},150);
+}
+function stopGame(){if(timer){clearInterval(timer);timer=null;}}
+document.addEventListener("keydown",e=>{
+if(e.key==="ArrowUp")move(0,-1);
+if(e.key==="ArrowDown")move(0,1);
+if(e.key==="ArrowLeft")move(-1,0);
+if(e.key==="ArrowRight")move(1,0);
+});
 render();
 </script>
 </body>
