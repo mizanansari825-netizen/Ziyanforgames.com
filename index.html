@@ -5,518 +5,1043 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZIYAN GAMING</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080b16;color:white;font-family:Arial,sans-serif}
-header{text-align:center;padding:22px 10px;background:#11172c;border-bottom:2px solid #00e5ff}
-header h1{margin:0;color:#00e5ff;font-size:30px;letter-spacing:2px}
-header p{color:#aab5d0;margin:8px 0 0}
-.tabs{display:flex;gap:10px;padding:15px;max-width:950px;margin:auto}
-.tabs button{flex:1;padding:15px 5px;border:1px solid #00e5ff;border-radius:10px;background:#151d35;color:white;font-weight:bold;font-size:16px}
-.tabs button.active{background:#00c9e8;color:#06101c}
-#listView{max-width:950px;margin:auto;padding:10px 15px 30px}
-.section-title{color:#00e5ff;margin:10px 0 15px}
-.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
-.game-card{background:#141d34;border:1px solid #293957;border-radius:12px;padding:16px 10px;text-align:center}
-.game-icon{font-size:30px}
-.game-card h3{font-size:15px;margin:10px 0}
-.game-card button{width:100%;padding:10px;border:0;border-radius:7px;background:#00d9f5;color:#06101c;font-weight:bold}
-#gameView{display:none;max-width:700px;margin:15px auto;padding:15px}
-#gameContent{background:#141d34;border:1px solid #293957;border-radius:12px;padding:18px;text-align:center;min-height:250px}
-#gameContent button{padding:11px 15px;margin:5px;border:0;border-radius:7px;background:#00d9f5;color:#06101c;font-weight:bold}
-#gameContent input{padding:12px;border-radius:7px;border:1px solid #00d9f5;margin:6px;max-width:90%}
-.back-btn{width:100%;padding:13px;margin-bottom:12px;background:#ff4757;color:white;border:0;border-radius:8px;font-weight:bold;font-size:16px}
-footer{text-align:center;color:#7e8aa8;padding:20px}
+body{
+ margin:0;
+ background:#101820;
+ color:#f4f1e9;
+ font-family:Georgia,serif;
+}
+header{
+ text-align:center;
+ padding:25px 15px;
+ background:#0b1218;
+ border-bottom:1px solid #e6b85c;
+}
+header h1{
+ margin:0;
+ color:#e6b85c;
+ letter-spacing:4px;
+ font-size:32px;
+}
+header p{
+ color:#a9b5bd;
+ font:13px Arial;
+}
+main{
+ max-width:1100px;
+ margin:auto;
+ padding:20px 14px;
+}
+.tabs{
+ display:flex;
+ gap:10px;
+ margin-bottom:22px;
+}
+.tab{
+ flex:1;
+ padding:13px;
+ border:1px solid #e6b85c;
+ background:transparent;
+ color:#e6b85c;
+ border-radius:7px;
+ font-weight:bold;
+}
+.tab.active{
+ background:#e6b85c;
+ color:#17212a;
+}
+#games{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+ gap:13px;
+}
+.card{
+ background:linear-gradient(145deg,#22333e,#17232c);
+ border:1px solid #31424d;
+ border-radius:10px;
+ padding:15px;
+ min-height:145px;
+ display:flex;
+ flex-direction:column;
+ justify-content:space-between;
+}
+.card .num{
+ color:#e6b85c;
+ font:12px Arial;
+}
+.card h3{
+ font-size:17px;
+ margin:12px 0;
+}
+.play{
+ border:0;
+ border-radius:6px;
+ background:#e6b85c;
+ color:#17212a;
+ padding:10px;
+ font-weight:bold;
+}
+#screen{
+ display:none;
+ background:#17232c;
+ border:1px solid #e6b85c;
+ border-radius:12px;
+ padding:16px;
+ min-height:400px;
+}
+.gamehead{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ border-bottom:1px solid #31424d;
+ padding-bottom:12px;
+ margin-bottom:18px;
+}
+.gamehead h2{
+ margin:0;
+ color:#e6b85c;
+ font-size:22px;
+}
+.back{
+ background:transparent;
+ color:#e6b85c;
+ border:1px solid #e6b85c;
+ border-radius:6px;
+ padding:9px 13px;
+}
+#stage{
+ text-align:center;
+ max-width:650px;
+ margin:auto;
+ font-family:Arial,sans-serif;
+}
+#stage button{
+ background:#e6b85c;
+ color:#17212a;
+ border:0;
+ border-radius:6px;
+ padding:11px 15px;
+ margin:5px;
+ font-weight:bold;
+}
+#stage input{
+ padding:11px;
+ border-radius:6px;
+ border:1px solid #e6b85c;
+ background:#0d171e;
+ color:white;
+ width:min(220px,90%);
+}
+#stage .big{
+ font-size:38px;
+ color:#e6b85c;
+ margin:18px;
+}
+#stage .board{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:7px;
+ max-width:300px;
+ margin:18px auto;
+}
+#stage .cell{
+ height:85px;
+ font-size:30px;
+ background:#263945;
+ color:white;
+ border:1px solid #53636d;
+ border-radius:8px;
+}
+#stage canvas{
+ display:block;
+ max-width:100%;
+ margin:12px auto;
+ background:#09131a;
+ border:1px solid #53636d;
+ border-radius:8px;
+ touch-action:manipulation;
+}
+footer{
+ text-align:center;
+ color:#71818b;
+ padding:25px;
+ font:12px Arial;
+}
+@media(max-width:420px){
+ #games{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .card{padding:12px;min-height:135px}
+}
 </style>
 </head>
+
 <body>
 
 <header>
 <h1>ZIYAN GAMING</h1>
-<p>PLAY • ENJOY • HAVE FUN</p>
+<p>CLASSIC ARCADE • QUICK PLAY • HAVE FUN</p>
 </header>
 
-<div class="tabs">
-<button id="tab2d" class="active" onclick="choose('2d')">2D GAMES</button>
-<button id="tab3d" onclick="choose('3d')">3D GAMES</button>
+<main>
+
+<div id="home">
+ <div class="tabs">
+  <button class="tab active" id="allTab"
+  onclick="showGames('all')">ALL GAMES</button>
+
+  <button class="tab" id="favTab"
+  onclick="showGames('puzzle')">PUZZLE & BRAIN</button>
+ </div>
+
+ <div id="games"></div>
 </div>
 
-<div id="listView">
-<h2 class="section-title" id="listTitle">2D GAMES</h2>
-<div class="games-grid" id="gamesGrid"></div>
-</div>
+<section id="screen">
+ <div class="gamehead">
+  <h2 id="gameTitle">Game</h2>
+  <button class="back" onclick="goHome()">
+  ← BACK TO GAMES
+  </button>
+ </div>
+ <div id="stage"></div>
+</section>
 
-<div id="gameView">
-<button class="back-btn" onclick="back()">← EXIT GAME</button>
-<div id="gameContent"></div>
-</div>
+</main>
 
-<footer>© 2026 ZIYAN GAMING</footer>
+<footer>ZIYAN GAMING · 25 CLASSIC MINI GAMES</footer>
 
 <script>
-const games2=[
-"Snake Game","Tap Challenge","Reaction Test","Guess The Number",
-"Math Challenge","Memory Test","Tic Tac Toe","Rock Paper Scissors",
-"Coin Toss","Dice Roll","Catch The Dot","Color Match",
-"Find The Odd Number","Higher or Lower","Typing Challenge",
-"Word Scramble","Number Sequence","Dodge Game","Pong Mini",
-"Brick Breaker","Catch The Star","2048 Mini","Lights Puzzle",
-"Quick Click","Target Practice"
+
+const names=[
+'Tic Tac Toe',
+'Rock Paper Scissors',
+'Guess The Number',
+'Tap Counter',
+'Reaction Test',
+'Memory Match',
+'Math Sprint',
+'Word Scramble',
+'Color Match',
+'Higher or Lower',
+'Dice Duel',
+'Coin Flip',
+'Number Sequence',
+'Odd One Out',
+'Whack The Dot',
+'Snake',
+'Pong',
+'Breakout',
+'Catch The Stars',
+'Dodge Blocks',
+'2048 Mini',
+'Lights Out',
+'Typing Sprint',
+'Quick Quiz',
+'Target Click'
 ];
 
-const games3=[
-"3D Runner","3D Car Drive","3D Bike Ride","3D Ball Run",
-"3D Space Run","3D Road Escape","3D Jump World","3D Racing",
-"3D Cube Runner","3D Sky Runner","3D Tunnel Run","3D Neon Drive",
-"3D Block World","3D Hill Climb","3D Speed Run","3D Obstacle Run",
-"3D Endless Road","3D Space Drive","3D City Run","3D Maze Run",
-"3D Color Road","3D Bridge Run","3D Rocket Run","3D Tower Jump",
-"3D Adventure"
-];
+const puzzle=new Set([
+0,2,5,6,7,8,9,12,13,20,21,22,23
+]);
 
-let currentCategory="2d";
-let selectedGame=0;
+let currentTimer=null;
+let cleanup=null;
+let active=0;
 
-function render(){
- const grid=document.getElementById("gamesGrid");
- const title=document.getElementById("listTitle");
- const games=currentCategory==="2d"?games2:games3;
- title.textContent=currentCategory==="2d"?"25 TWO-DIMENSIONAL GAMES":"25 THREE-DIMENSIONAL STYLE GAMES";
- grid.innerHTML="";
- games.forEach((game,index)=>{
-  const card=document.createElement("div");
-  card.className="game-card";
-  const icon=document.createElement("div");
-  icon.className="game-icon";
-  icon.textContent=currentCategory==="2d"?"🎮":"🏎️";
-  const name=document.createElement("h3");
-  name.textContent=game;
-  const button=document.createElement("button");
-  button.textContent="PLAY NOW";
-  button.onclick=()=>openGame(index);
-  card.append(icon,name,button);
-  grid.appendChild(card);
+function showGames(mode='all'){
+
+ document.getElementById('home').style.display='block';
+ document.getElementById('screen').style.display='none';
+
+ document.getElementById('allTab').classList.toggle(
+ 'active',mode==='all');
+
+ document.getElementById('favTab').classList.toggle(
+ 'active',mode==='puzzle');
+
+ document.getElementById('games').innerHTML=
+ names.map((n,i)=>({n,i}))
+ .filter(x=>mode==='all'||puzzle.has(x.i))
+ .map(x=>`
+ <article class="card">
+  <span class="num">GAME ${String(x.i+1).padStart(2,'0')}</span>
+  <h3>${x.n}</h3>
+  <button class="play" onclick="openGame(${x.i})">
+  PLAY NOW →
+  </button>
+ </article>
+ `).join('');
+}
+
+function goHome(){
+ if(currentTimer)clearInterval(currentTimer);
+ if(cleanup)cleanup();
+
+ currentTimer=null;
+ cleanup=null;
+
+ showGames('all');
+}
+
+function openGame(i){
+ active=i;
+
+ if(currentTimer)clearInterval(currentTimer);
+ if(cleanup)cleanup();
+
+ currentTimer=null;
+ cleanup=null;
+
+ document.getElementById('home').style.display='none';
+ document.getElementById('screen').style.display='block';
+
+ document.getElementById('gameTitle').textContent=names[i];
+
+ const s=document.getElementById('stage');
+ s.innerHTML='';
+
+ games[i](s);
+}
+
+function msg(s,t){
+ s.innerHTML=`<p>${t}</p>`;
+}
+
+function btn(s,t,fn){
+ let b=document.createElement('button');
+ b.textContent=t;
+ b.onclick=fn;
+ s.appendChild(b);
+ return b;
+}
+
+function ticTacToe(s){
+ let board=Array(9).fill('');
+ let turn='X';
+ s.innerHTML='<h3>Play against a friend</h3><div class="board" id="ttt"></div><p id="status">Player X turn</p>';
+ const grid=s.querySelector('#ttt');
+ board.forEach((_,i)=>{
+  let b=document.createElement('button');
+  b.className='cell';
+  b.onclick=()=>{
+   if(board[i]||!turn)return;
+   board[i]=turn;
+   b.textContent=turn;
+   let wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+   let win=wins.some(w=>w.every(x=>board[x]===turn));
+   if(win){
+    s.querySelector('#status').textContent='Player '+turn+' wins!';
+    turn='';
+   }else if(board.every(Boolean)){
+    s.querySelector('#status').textContent='Draw!';
+    turn='';
+   }else{
+    turn=turn==='X'?'O':'X';
+    s.querySelector('#status').textContent='Player '+turn+' turn';
+   }
+  };
+  grid.appendChild(b);
+ });
+ btn(s,'Restart',()=>ticTacToe(s));
+}
+
+function rockPaperScissors(s){
+ let score=0;
+ const choices=['Rock','Paper','Scissors'];
+ s.innerHTML='<h3>Choose your move</h3><p id="result">First to play wins!</p><h2 id="score">Score: 0</h2>';
+ choices.forEach(c=>btn(s,c,()=>{
+  let cpu=choices[Math.floor(Math.random()*3)];
+  let result=c===cpu?'Draw':(
+   (c==='Rock'&&cpu==='Scissors')||
+   (c==='Paper'&&cpu==='Rock')||
+   (c==='Scissors'&&cpu==='Paper')?'You win!':'Computer wins!');
+  if(result==='You win!')score++;
+  s.querySelector('#result').textContent='You: '+c+' | Computer: '+cpu+' — '+result;
+  s.querySelector('#score').textContent='Score: '+score;
+ }));
+}
+
+function guessNumber(s){
+ let answer=Math.floor(Math.random()*100)+1;
+ let tries=0;
+ s.innerHTML='<h3>Guess a number from 1 to 100</h3><input id="guess" type="number" min="1" max="100" placeholder="Enter number"><p id="hint">You have unlimited tries!</p>';
+ btn(s,'CHECK',()=>{
+  let n=Number(s.querySelector('#guess').value);
+  if(!Number.isInteger(n)||n<1||n>100){
+   s.querySelector('#hint').textContent='Enter a number from 1 to 100.';
+   return;
+  }
+  tries++;
+  let hint=n===answer?'Correct! You won in '+tries+' tries!':n<answer?'Too low! Try higher.':'Too high! Try lower.';
+  s.querySelector('#hint').textContent=hint;
+ });
+ btn(s,'New Number',()=>guessNumber(s));
+}
+
+function tapCounter(s){
+ let count=0,time=10;
+ s.innerHTML='<h3>Tap as fast as you can!</h3><div class="big" id="count">0</div><p id="time">Time: 10</p>';
+ let play=btn(s,'TAP!',()=>{
+  if(time<=0)return;
+  count++;
+  s.querySelector('#count').textContent=count;
+ });
+ currentTimer=setInterval(()=>{
+  time--;
+  s.querySelector('#time').textContent='Time: '+time;
+  if(time<=0){
+   clearInterval(currentTimer);
+   currentTimer=null;
+   play.disabled=true;
+   msg(s,'Time up! Your score: '+count);
+   btn(s,'Play Again',()=>tapCounter(s));
+  }
+ },1000);
+}
+
+function reactionTest(s){
+ s.innerHTML='<h3>Reaction Test</h3><p id="info">Press START, then wait for green.</p><div class="big" id="area">READY?</div>';
+ let area=s.querySelector('#area');
+ let waiting=false,started=false,start=0,timer=null;
+ const startBtn=btn(s,'START',()=>{
+  if(started)return;
+  started=true;
+  waiting=true;
+  area.textContent='WAIT...';
+  startBtn.disabled=true;
+  timer=setTimeout(()=>{
+   waiting=false;
+   start=Date.now();
+   area.textContent='TAP NOW!';
+   area.style.color='#55dd88';
+  },1500+Math.random()*3000);
+ });
+ area.onclick=()=>{
+  if(waiting){
+   clearTimeout(timer);
+   area.textContent='Too early!';
+   s.querySelector('#info').textContent='Try again.';
+   started=false;
+   startBtn.disabled=false;
+  }else if(start){
+   s.querySelector('#info').textContent='Your reaction: '+(Date.now()-start)+' ms';
+   start=0;
+   started=false;
+   startBtn.disabled=false;
+   area.textContent='DONE';
+   area.style.color='#e6b85c';
+  }
+ };
+ cleanup=()=>clearTimeout(timer);
+}
+
+function memoryMatch(s){
+ let symbols=['★','●','▲','◆','♥','■','★','●','▲','◆','♥','■'];
+ symbols.sort(()=>Math.random()-.5);
+ let first=null,lock=false,moves=0,matched=0;
+ s.innerHTML='<h3>Find matching pairs</h3><p id="moves">Moves: 0</p><div class="board" id="memory"></div>';
+ let grid=s.querySelector('#memory');
+ grid.style.gridTemplateColumns='repeat(4,1fr)';
+ symbols.forEach((v,i)=>{
+  let b=document.createElement('button');
+  b.className='cell';
+  b.textContent='?';
+  b.onclick=()=>{
+   if(lock||b.dataset.done||b===first)return;
+   b.textContent=v;
+   if(!first){first=b;return;}
+   moves++;
+   s.querySelector('#moves').textContent='Moves: '+moves;
+   if(first.textContent===b.textContent){
+    first.dataset.done='1';b.dataset.done='1';
+    first=null;matched+=2;
+    if(matched===12)msg(s,'You matched all pairs in '+moves+' moves!');
+   }else{
+    lock=true;
+    let old=first;
+    currentTimer=setTimeout(()=>{
+     old.textContent='?';b.textContent='?';
+     first=null;lock=false;currentTimer=null;
+    },700);
+   }
+  };
+  grid.appendChild(b);
+ });
+ btn(s,'Restart',()=>memoryMatch(s));
+}
+
+function mathSprint(s){
+ let score=0,time=30;
+ s.innerHTML='<h3>Solve as many as you can!</h3><div class="big" id="question"></div><input id="answer" type="number" placeholder="Your answer"><p id="score">Score: 0</p><p id="time">Time: 30</p>';
+ let a,b,correct;
+ function question(){
+  a=Math.floor(Math.random()*12)+1;
+  b=Math.floor(Math.random()*12)+1;
+  correct=a+b;
+  s.querySelector('#question').textContent=a+' + '+b+' = ?';
+  s.querySelector('#answer').value='';
+ }
+ btn(s,'SUBMIT',()=>{
+  if(time<=0)return;
+  if(Number(s.querySelector('#answer').value)===correct){
+   score++;
+   s.querySelector('#score').textContent='Score: '+score;
+  }
+  question();
+ });
+ question();
+ currentTimer=setInterval(()=>{
+  time--;
+  s.querySelector('#time').textContent='Time: '+time;
+  if(time<=0){
+   clearInterval(currentTimer);
+   currentTimer=null;
+   msg(s,'Time up! Your score: '+score);
+   btn(s,'Play Again',()=>mathSprint(s));
+  }
+ },1000);
+}
+
+function wordScramble(s){
+ const words=['GAMING','COMPUTER','PLANET','PUZZLE','ROCKET','MONSTER','ARCADE','PLAYER'];
+ let word=words[Math.floor(Math.random()*words.length)];
+ let mixed=word.split('').sort(()=>Math.random()-.5).join('');
+ s.innerHTML='<h3>Unscramble the word</h3><div class="big">'+mixed+'</div><input id="word" placeholder="Your answer"><p id="hint">Unscramble the letters!</p>';
+ btn(s,'CHECK',()=>{
+  let val=s.querySelector('#word').value.trim().toUpperCase();
+  s.querySelector('#hint').textContent=val===word?'Correct! You got it!':'Not quite. Try again!';
+ });
+ btn(s,'New Word',()=>wordScramble(s));
+ }
+ 
+function colorMatch(s){
+ const colors=['RED','BLUE','GREEN','YELLOW','PURPLE'];
+ let score=0,time=20;
+ s.innerHTML='<h3>Match the color name!</h3><div class="big" id="word"></div><p id="time">Time: 20</p><p id="score">Score: 0</p>';
+ function next(){
+  let c=colors[Math.floor(Math.random()*colors.length)];
+  let display=colors[Math.floor(Math.random()*colors.length)];
+  s.querySelector('#word').textContent=display;
+  s.querySelector('#word').style.color=c.toLowerCase();
+  s.querySelector('#word').dataset.correct=display===c?'YES':'NO';
+ }
+ colors.forEach(c=>btn(s,c,()=>{
+  if(time<=0)return;
+  if(s.querySelector('#word').dataset.correct==='YES'&&c===s.querySelector('#word').textContent)score++;
+  s.querySelector('#score').textContent='Score: '+score;
+  next();
+ }));
+ next();
+ currentTimer=setInterval(()=>{
+  time--;
+  s.querySelector('#time').textContent='Time: '+time;
+  if(time<=0){
+   clearInterval(currentTimer);currentTimer=null;
+   msg(s,'Time up! Score: '+score);
+   btn(s,'Play Again',()=>colorMatch(s));
+  }
+ },1000);
+}
+
+function higherLower(s){
+ let current=Math.floor(Math.random()*13)+1,score=0;
+ s.innerHTML='<h3>Will the next number be higher or lower?</h3><div class="big" id="num">'+current+'</div><p id="score">Score: 0</p>';
+ function play(choice){
+  let next=Math.floor(Math.random()*13)+1;
+  let correct=choice==='higher'?next>current:next<current;
+  if(next===current)correct=false;
+  if(correct)score++;else score=0;
+  current=next;
+  s.querySelector('#num').textContent=current;
+  s.querySelector('#score').textContent='Score: '+score;
+  s.querySelector('#result').textContent=correct?'Correct!':'Wrong! Streak reset.';
+ }
+ s.innerHTML+='<p id="result">Choose carefully!</p>';
+ btn(s,'HIGHER',()=>play('higher'));
+ btn(s,'LOWER',()=>play('lower'));
+}
+
+function diceDuel(s){
+ s.innerHTML='<h3>Dice Duel</h3><div class="big" id="dice">⚄</div><p id="result">Roll the dice!</p>';
+ btn(s,'ROLL DICE',()=>{
+  let a=Math.floor(Math.random()*6)+1;
+  let b=Math.floor(Math.random()*6)+1;
+  s.querySelector('#dice').textContent='You: '+a+' | CPU: '+b;
+  s.querySelector('#result').textContent=a>b?'You win!':a<b?'Computer wins!':'Draw!';
  });
 }
 
-function choose(category){
- currentCategory=category;
- document.getElementById("tab2d").classList.toggle("active",category==="2d");
- document.getElementById("tab3d").classList.toggle("active",category==="3d");
- render();
+function coinFlip(s){
+ s.innerHTML='<h3>Heads or Tails?</h3><div class="big" id="coin">?</div><p id="result">Make your choice!</p>';
+ ['HEADS','TAILS'].forEach(c=>btn(s,c,()=>{
+  let result=Math.random()<.5?'HEADS':'TAILS';
+  s.querySelector('#coin').textContent=result;
+  s.querySelector('#result').textContent=c===result?'You guessed correctly!':'Not this time!';
+ }));
 }
 
-function openGame(index){
- selectedGame=index;
- document.getElementById("listView").style.display="none";
- document.querySelector(".tabs").style.display="none";
- document.getElementById("gameView").style.display="block";
- if(currentCategory==="2d"){start2d(index)}
- else{start3d(index)}
+function numberSequence(s){
+ let start=Math.floor(Math.random()*10)+2;
+ let step=Math.floor(Math.random()*8)+2;
+ let answer=start+step*3;
+ s.innerHTML='<h3>Complete the sequence</h3><div class="big">'+[start,start+step,start+step*2,'?'].join(' , ')+'</div><input id="answer" type="number" placeholder="Missing number"><p id="result"></p>';
+ btn(s,'CHECK',()=>{
+  s.querySelector('#result').textContent=Number(s.querySelector('#answer').value)===answer?'Correct!':'Try again!';
+ });
+ btn(s,'New Puzzle',()=>numberSequence(s));
 }
 
-function html(content){
- document.getElementById("gameContent").innerHTML=content;
+function oddOneOut(s){
+ let groups=[
+ ['Apple','Banana','Car','Mango'],
+ ['Cat','Dog','Chair','Tiger'],
+ ['Red','Blue','Circle','Green'],
+ ['Bus','Train','Plane','Potato']
+ ];
+ let group=groups[Math.floor(Math.random()*groups.length)];
+ let answer=group.find(x=>['Car','Chair','Circle','Potato'].includes(x));
+ s.innerHTML='<h3>Find the odd one out</h3><p>Choose the item that does not belong.</p>';
+ group.sort(()=>Math.random()-.5).forEach(x=>btn(s,x,()=>{
+  s.querySelector('#result').textContent=x===answer?'Correct!':'Wrong, try another!';
+ }));
+ s.innerHTML+='<p id="result"></p>';
 }
 
-function gameBox(title,content){
- html(`<h2>${title}</h2>${content}`);
-}
-
-function start2d(i){
- const list=[snake,tap,reaction,guess,math,memory,ttt,rps,coin,dice,mole,color,odd,higher,typing,scramble,sequence,dodge,pong,brick,catchStar,g2048,lights,quick,target];
- if(typeof list[i]==="function"){list[i]()}
- else{gameBox("Game Error","Game not available")}
-}
-
-function back(){
- document.getElementById("gameView").style.display="none";
- document.getElementById("listView").style.display="block";
- document.querySelector(".tabs").style.display="flex";
- render();
-}
-
-render();
-
-
-===
-
-function snake(){
- gameBox("Snake Game",`
- <p>Score: <span id="snakeScore">0</span></p>
- <canvas id="snakeCanvas" width="300" height="300" style="background:#080b16;max-width:100%"></canvas>
- <p><button onclick="snakeDir(0,-1)">UP</button></p>
- <button onclick="snakeDir(-1,0)">LEFT</button>
- <button onclick="snakeDir(1,0)">RIGHT</button>
- <p><button onclick="snakeDir(0,1)">DOWN</button></p>`);
- let c=document.getElementById("snakeCanvas"),ctx=c.getContext("2d");
- let body=[{x:7,y:7}],food={x:3,y:5},dx=1,dy=0,score=0,dead=false;
- window.snakeDir=(x,y)=>{if(x!==-dx||y!==-dy){dx=x;dy=y}};
- window.snakeTimer=setInterval(()=>{
-  if(dead)return;
-  let h={x:body[0].x+dx,y:body[0].y+dy};
-  if(h.x<0||h.y<0||h.x>=15||h.y>=15||body.some(p=>p.x===h.x&&p.y===h.y)){
-   dead=true;clearInterval(window.snakeTimer);alert("Game over! Score: "+score);return;
+function whackDot(s){
+ let score=0,time=20;
+ s.innerHTML='<h3>Tap the moving target!</h3><p id="score">Score: 0</p><p id="time">Time: 20</p><div id="target" style="height:220px;position:relative;background:#263945;border-radius:10px"></div>';
+ let area=s.querySelector('#target');
+ let dot=document.createElement('button');
+ dot.textContent='●';
+ dot.style.position='absolute';
+ dot.style.margin='0';
+ dot.onclick=()=>{
+  score++;
+  s.querySelector('#score').textContent='Score: '+score;
+  move();
+ };
+ area.appendChild(dot);
+ function move(){
+  dot.style.left=Math.random()*75+'%';
+  dot.style.top=Math.random()*75+'%';
+ }
+ move();
+ currentTimer=setInterval(()=>{
+  time--;
+  s.querySelector('#time').textContent='Time: '+time;
+  if(time<=0){
+   clearInterval(currentTimer);currentTimer=null;
+   msg(s,'Game over! Score: '+score);
+   btn(s,'Play Again',()=>whackDot(s));
   }
-  body.unshift(h);
-  if(h.x===food.x&&h.y===food.y){score++;food={x:Math.floor(Math.random()*15),y:Math.floor(Math.random()*15)};document.getElementById("snakeScore").textContent=score}
-  else body.pop();
-  ctx.fillStyle="#080b16";ctx.fillRect(0,0,300,300);
-  ctx.fillStyle="#00e5ff";body.forEach(p=>ctx.fillRect(p.x*20,p.y*20,18,18));
-  ctx.fillStyle="red";ctx.fillRect(food.x*20,food.y*20,18,18);
- },150);
+ },1000);
 }
 
-function tap(){
- let n=0;
- gameBox("Tap Challenge",`<h1 id="tapScore">0</h1><button onclick="tapAdd()">TAP FAST!</button><p>Tap as many times as you can.</p>`);
- window.tapAdd=()=>document.getElementById("tapScore").textContent=++n;
+function snakeGame(s){
+ s.innerHTML='<h3>Snake</h3><p>Use arrow keys or buttons.</p><canvas id="snake" width="300" height="300"></canvas><div><button id="up">UP</button><br><button id="left">LEFT</button><button id="down">DOWN</button><button id="right">RIGHT</button></div><p id="score">Score: 0</p>';
+ const c=s.querySelector('canvas'),ctx=c.getContext('2d');
+ let snake=[{x:150,y:150}],dir={x:10,y:0},food={x:50,y:50},score=0,alive=true;
+ function setDir(x,y){
+  if(x!==-dir.x||y!==-dir.y)dir={x,y};
+ }
+ s.querySelector('#up').onclick=()=>setDir(0,-10);
+ s.querySelector('#down').onclick=()=>setDir(0,10);
+ s.querySelector('#left').onclick=()=>setDir(-10,0);
+ s.querySelector('#right').onclick=()=>setDir(10,0);
+ function key(e){
+  if(e.key==='ArrowUp')setDir(0,-10);
+  if(e.key==='ArrowDown')setDir(0,10);
+  if(e.key==='ArrowLeft')setDir(-10,0);
+  if(e.key==='ArrowRight')setDir(10,0);
+ }
+ document.addEventListener('keydown',key);
+ cleanup=()=>document.removeEventListener('keydown',key);
+ currentTimer=setInterval(()=>{
+  if(!alive)return;
+  let head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+  if(head.x<0||head.x>=300||head.y<0||head.y>=300||snake.some(p=>p.x===head.x&&p.y===head.y)){
+   alive=false;
+   clearInterval(currentTimer);currentTimer=null;
+   s.querySelector('#score').textContent='Game over! Score: '+score;
+   btn(s,'Play Again',()=>snakeGame(s));
+   return;
+  }
+  snake.unshift(head);
+  if(head.x===food.x&&head.y===food.y){
+   score++;
+   food={x:Math.floor(Math.random()*30)*10,y:Math.floor(Math.random()*30)*10};
+   s.querySelector('#score').textContent='Score: '+score;
+  }else snake.pop();
+  ctx.fillStyle='#09131a';ctx.fillRect(0,0,300,300);
+  ctx.fillStyle='#e6b85c';snake.forEach(p=>ctx.fillRect(p.x,p.y,9,9));
+  ctx.fillStyle='#55dd88';ctx.fillRect(food.x,food.y,9,9);
+ },130);
 }
 
-function reaction(){
- gameBox("Reaction Test",`<h2 id="reactText">Press START</h2><button onclick="reactStart()">START</button><button onclick="reactHit()">TAP!</button>`);
- window.reactStart=()=>{
-  let el=document.getElementById("reactText");el.textContent="Wait...";
-  el.style.background="red";window.reactReady=false;clearTimeout(window.reactTimer);
-  window.reactTimer=setTimeout(()=>{window.reactReady=true;window.reactTime=Date.now();el.textContent="TAP NOW!";el.style.background="green"},1500+Math.random()*3000);
+function pongGame(s){
+ s.innerHTML='<h3>Pong</h3><p>Move your paddle with your finger or mouse.</p><canvas id="pong" width="320" height="240"></canvas><p id="score">Score: 0</p>';
+ const c=s.querySelector('canvas'),ctx=c.getContext('2d');
+ let x=160,y=100,dx=3,dy=3,paddle=130,score=0;
+ function move(e){
+  let r=c.getBoundingClientRect();
+  paddle=(e.clientX-r.left)*c.width/r.width-35;
+ }
+ c.addEventListener('pointermove',move);
+ cleanup=()=>c.removeEventListener('pointermove',move);
+ currentTimer=setInterval(()=>{
+  x+=dx;y+=dy;
+  if(x<7||x>313)dx=-dx;
+  if(y<7)dy=-dy;
+  if(y>215&&x>paddle&&x<paddle+70){
+   dy=-Math.abs(dy);score++;
+   s.querySelector('#score').textContent='Score: '+score;
+  }
+  if(y>240){
+   clearInterval(currentTimer);currentTimer=null;
+   msg(s,'Game over! Score: '+score);
+   btn(s,'Play Again',()=>pongGame(s));
+   return;
+  }
+  ctx.fillStyle='#09131a';ctx.fillRect(0,0,320,240);
+  ctx.fillStyle='#e6b85c';ctx.beginPath();ctx.arc(x,y,7,0,Math.PI*2);ctx.fill();
+  ctx.fillRect(paddle,225,70,8);
+ },25);
+}
+
+function breakoutGame(s){
+ s.innerHTML='<h3>Breakout</h3><p>Move the paddle with your finger or mouse.</p><canvas id="break" width="320" height="260"></canvas><p id="score">Score: 0</p>';
+ const c=s.querySelector('canvas'),ctx=c.getContext('2d');
+ let x=160,y=200,dx=3,dy=-3,paddle=130,score=0;
+ let bricks=Array.from({length:15},(_,i)=>({x:8+(i%5)*62,y:15+Math.floor(i/5)*25,on:true}));
+ function move(e){
+  let r=c.getBoundingClientRect();
+  paddle=(e.clientX-r.left)*c.width/r.width-35;
+ }
+ c.addEventListener('pointermove',move);
+ cleanup=()=>c.removeEventListener('pointermove',move);
+ currentTimer=setInterval(()=>{
+  x+=dx;y+=dy;
+  if(x<6||x>314)dx=-dx;
+  if(y<6)dy=-dy;
+  if(y>230&&x>paddle&&x<paddle+70)dy=-Math.abs(dy);
+  bricks.forEach(b=>{
+   if(b.on&&x>b.x&&x<b.x+55&&y>b.y&&y<b.y+15){
+    b.on=false;dy=-dy;score++;
+    s.querySelector('#score').textContent='Score: '+score;
+   }
+  });
+  if(y>260||score===15){
+   clearInterval(currentTimer);currentTimer=null;
+   msg(s,score===15?'You cleared all bricks!':'Game over! Score: '+score);
+   btn(s,'Play Again',()=>breakoutGame(s));
+   return;
+  }
+  ctx.fillStyle='#09131a';ctx.fillRect(0,0,320,260);
+  ctx.fillStyle='#e6b85c';bricks.forEach(b=>{if(b.on)ctx.fillRect(b.x,b.y,55,15)});
+  ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);ctx.fill();
+  ctx.fillRect(paddle,245,70,8);
+ },25);
+ }
+  
+function catchStars(s){
+ s.innerHTML='<h3>Catch the Stars</h3><p>Move the basket with your finger.</p><canvas id="catch" width="320" height="300"></canvas><p id="score">Score: 0</p>';
+ const c=s.querySelector('canvas'),ctx=c.getContext('2d');
+ let basket=130,stars=[],score=0,alive=true;
+ function move(e){
+  let r=c.getBoundingClientRect();
+  basket=Math.max(0,Math.min(260,(e.clientX-r.left)*320/r.width-30));
+ }
+ c.addEventListener('pointermove',move);
+ cleanup=()=>c.removeEventListener('pointermove',move);
+ currentTimer=setInterval(()=>{
+  if(!alive)return;
+  if(Math.random()<.06)stars.push({x:Math.random()*300,y:0});
+  stars.forEach(a=>a.y+=3);
+  stars=stars.filter(a=>{
+   if(a.y>265&&a.x>basket-10&&a.x<basket+70){
+    score++;
+    s.querySelector('#score').textContent='Score: '+score;
+    return false;
+   }
+   if(a.y>300)alive=false;
+   return a.y<300;
+  });
+  ctx.fillStyle='#09131a';ctx.fillRect(0,0,320,300);
+  ctx.fillStyle='#e6b85c';
+  stars.forEach(a=>{ctx.beginPath();ctx.arc(a.x,a.y,7,0,Math.PI*2);ctx.fill()});
+  ctx.fillRect(basket,275,60,12);
+  if(!alive){
+   clearInterval(currentTimer);currentTimer=null;
+   msg(s,'Game over! Stars caught: '+score);
+   btn(s,'Play Again',()=>catchStars(s));
+  }
+ },30);
+}
+
+function dodgeBlocks(s){
+ s.innerHTML='<h3>Dodge the Blocks</h3><p>Move left and right to avoid blocks.</p><canvas id="dodge" width="320" height="300"></canvas><div><button id="dl">LEFT</button><button id="dr">RIGHT</button></div><p id="score">Score: 0</p>';
+ const c=s.querySelector('canvas'),ctx=c.getContext('2d');
+ let player=140,blocks=[],score=0,alive=true,left=false,right=false;
+ s.querySelector('#dl').onpointerdown=()=>left=true;
+ s.querySelector('#dl').onpointerup=()=>left=false;
+ s.querySelector('#dr').onpointerdown=()=>right=true;
+ s.querySelector('#dr').onpointerup=()=>right=false;
+ function key(e){
+  if(e.key==='ArrowLeft')left=true;
+  if(e.key==='ArrowRight')right=true;
+ }
+ function keyup(e){
+  if(e.key==='ArrowLeft')left=false;
+  if(e.key==='ArrowRight')right=false;
+ }
+ document.addEventListener('keydown',key);
+ document.addEventListener('keyup',keyup);
+ cleanup=()=>{
+  document.removeEventListener('keydown',key);
+  document.removeEventListener('keyup',keyup);
  };
- window.reactHit=()=>{
-  let el=document.getElementById("reactText");
-  if(!window.reactReady){clearTimeout(window.reactTimer);el.textContent="Too early!";return}
-  el.textContent="Your time: "+(Date.now()-window.reactTime)+" ms";window.reactReady=false;
- };
-}
-
-function guess(){
- window.guessN=Math.ceil(Math.random()*20);
- gameBox("Guess The Number",`<p>Guess from 1 to 20</p><input id="guessInput" type="number"><button onclick="guessCheck()">CHECK</button><p id="guessResult"></p>`);
- window.guessCheck=()=>{
-  let n=Number(document.getElementById("guessInput").value);
-  document.getElementById("guessResult").textContent=n===window.guessN?"You won!":n<window.guessN?"Too low!":"Too high!";
- };
-}
-
-function math(){
- let a=Math.ceil(Math.random()*20),b=Math.ceil(Math.random()*20);
- window.mathAnswer=a+b;
- gameBox("Math Challenge",`<h1>${a} + ${b} = ?</h1><input id="mathInput" type="number"><button onclick="mathCheck()">CHECK</button><p id="mathResult"></p>`);
- window.mathCheck=()=>document.getElementById("mathResult").textContent=Number(document.getElementById("mathInput").value)===window.mathAnswer?"Correct!":"Try again!";
-}
-
-function memory(){
- let nums=Array.from({length:5},()=>Math.floor(Math.random()*9)+1);
- window.memoryAnswer=nums.join("");
- gameBox("Memory Test",`<h2 id="memoryNums">${nums.join(" - ")}</h2><button onclick="memoryHide()">HIDE</button><input id="memoryInput" placeholder="Enter numbers"><button onclick="memoryCheck()">CHECK</button><p id="memoryResult"></p>`);
- window.memoryHide=()=>document.getElementById("memoryNums").textContent="???";
- window.memoryCheck=()=>document.getElementById("memoryResult").textContent=document.getElementById("memoryInput").value===window.memoryAnswer?"Correct!":"Try again!";
-}
-
-function ttt(){
- let b=Array(9).fill(""),turn="X";
- gameBox("Tic Tac Toe",`<h3 id="tttStatus">Turn: X</h3><div style="display:grid;grid-template-columns:repeat(3,75px);gap:5px;justify-content:center">${b.map((v,i)=>`<button id="ttt${i}" style="height:70px;font-size:25px" onclick="tttPlay(${i})"></button>`).join("")}</div><button onclick="ttt()">RESTART</button>`);
- window.tttPlay=i=>{
-  if(b[i]||!turn)return;b[i]=turn;document.getElementById("ttt"+i).textContent=turn;
-  let wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  if(wins.some(w=>w.every(j=>b[j]===turn))){document.getElementById("tttStatus").textContent=turn+" wins!";turn="";return}
-  if(b.every(Boolean)){document.getElementById("tttStatus").textContent="Draw!";turn="";return}
-  turn=turn==="X"?"O":"X";document.getElementById("tttStatus").textContent="Turn: "+turn;
- };
-}
-
-function rps(){
- gameBox("Rock Paper Scissors",`<button onclick="rpsPlay('Rock')">ROCK</button><button onclick="rpsPlay('Paper')">PAPER</button><button onclick="rpsPlay('Scissors')">SCISSORS</button><h3 id="rpsResult">Choose!</h3>`);
- window.rpsPlay=you=>{
-  let a=["Rock","Paper","Scissors"],cpu=a[Math.floor(Math.random()*3)];
-  let result=you===cpu?"Draw":((you==="Rock"&&cpu==="Scissors")||(you==="Paper"&&cpu==="Rock")||(you==="Scissors"&&cpu==="Paper"))?"You win!":"Computer wins!";
-  document.getElementById("rpsResult").textContent="You: "+you+" | CPU: "+cpu+" | "+result;
- };
-}
-
-function coin(){
- gameBox("Coin Toss",`<button onclick="coinFlip()">FLIP</button><h1 id="coinResult">?</h1>`);
- window.coinFlip=()=>document.getElementById("coinResult").textContent=Math.random()<.5?"HEADS":"TAILS";
-}
-
-function dice(){
- gameBox("Dice Roll",`<button onclick="diceRoll()">ROLL DICE</button><h1 id="diceResult">?</h1>`);
- window.diceRoll=()=>document.getElementById("diceResult").textContent=Math.floor(Math.random()*6)+1;
-}
-
-function mole(){
- let score=0;
- gameBox("Catch The Dot",`<p>Score: <span id="moleScore">0</span></p><div style="height:220px;background:#10182c;position:relative"><button id="moleDot" style="position:absolute" onclick="moleHit()">●</button></div>`);
- window.moleHit=()=>{
-  score++;document.getElementById("moleScore").textContent=score;
-  let d=document.getElementById("moleDot");d.style.left=Math.random()*85+"%";d.style.top=Math.random()*85+"%";
- };
-}
-
-function color(){
- let colors=["red","blue","green","yellow","purple"],target=colors[Math.floor(Math.random()*5)];
- gameBox("Color Match",`<h3>Tap ${target}</h3>${colors.map(c=>`<button style="background:${c};color:white" onclick="colorCheck('${c}')">${c}</button>`).join("")}<p id="colorResult"></p>`);
- window.colorCheck=c=>document.getElementById("colorResult").textContent=c===target?"Correct!":"Try again!";
-}
-
-function odd(){
- let nums=Array(9).fill(2),index=Math.floor(Math.random()*9);nums[index]=3;
- gameBox("Find The Odd Number",`<div style="display:grid;grid-template-columns:repeat(3,65px);gap:5px;justify-content:center">${nums.map((n,i)=>`<button style="height:60px" onclick="oddCheck(${i})">${n}</button>`).join("")}</div><p id="oddResult"></p>`);
- window.oddCheck=i=>document.getElementById("oddResult").textContent=i===index?"You found it!":"Try again!";
-}
-
-function higher(){
- let n=Math.ceil(Math.random()*50);window.higherN=n;
- gameBox("Higher or Lower",`<h2 id="higherNum">${n}</h2><button onclick="higherGuess('higher')">HIGHER</button><button onclick="higherGuess('lower')">LOWER</button><p id="higherResult">Guess next number</p>`);
- window.higherGuess=choice=>{
-  let next=Math.ceil(Math.random()*50),ok=choice==="higher"?next>window.higherN:next<window.higherN;
-  document.getElementById("higherResult").textContent=ok?"Correct!":"Wrong!";
-  document.getElementById("higherNum").textContent=next;window.higherN=next;
- };
-}
-
-function typing(){
- let word=["gaming","computer","javascript","website","keyboard"][Math.floor(Math.random()*5)];
- gameBox("Typing Challenge",`<h2>${word}</h2><input id="typingInput"><button onclick="typingCheck()">CHECK</button><p id="typingResult"></p>`);
- window.typingCheck=()=>document.getElementById("typingResult").textContent=document.getElementById("typingInput").value===word?"Perfect!":"Try again!";
-}
-
-function scramble(){
- let word=["APPLE","GAMING","PHONE","COMPUTER","SNAKE"][Math.floor(Math.random()*5)];
- let mixed=word.split("").sort(()=>Math.random()-.5).join("");
- gameBox("Word Scramble",`<h2>${mixed}</h2><input id="scrambleInput"><button onclick="scrambleCheck()">CHECK</button><p id="scrambleResult"></p>`);
- window.scrambleCheck=()=>document.getElementById("scrambleResult").textContent=document.getElementById("scrambleInput").value.toUpperCase()===word?"Correct!":"Try again!";
-}
-
-function sequence(){
- let n=Math.floor(Math.random()*20)+1;
- gameBox("Number Sequence",`<h2>${n} - ${n+1} - ${n+2} - ?</h2><input id="seqInput" type="number"><button onclick="seqCheck()">CHECK</button><p id="seqResult"></p>`);
- window.seqCheck=()=>document.getElementById("seqResult").textContent=Number(document.getElementById("seqInput").value)===n+3?"Correct!":"Try again!";
-}
-
-function dodge(){
- gameBox("Dodge Game",`<canvas id="dodgeCanvas" width="300" height="300" style="background:#10182c;max-width:100%"></canvas><p><button onclick="dodgeMove(-1)">LEFT</button><button onclick="dodgeMove(1)">RIGHT</button></p><p>Score: <span id="dodgeScore">0</span></p>`);
- let c=document.getElementById("dodgeCanvas"),ctx=c.getContext("2d"),x=140,y=0,px=135,score=0,over=false;
- window.dodgeMove=d=>px=Math.max(0,Math.min(270,px+d*25));
- window.dodgeTimer=setInterval(()=>{
-  if(over)return;y+=5;if(y>300){y=0;x=Math.random()*270;score++;document.getElementById("dodgeScore").textContent=score}
-  if(y>255&&Math.abs(px-x)<25){over=true;clearInterval(window.dodgeTimer);alert("Game over! Score: "+score)}
-  ctx.clearRect(0,0,300,300);ctx.fillStyle="red";ctx.fillRect(x,y,25,25);ctx.fillStyle="#00e5ff";ctx.fillRect(px,270,30,25);
+ currentTimer=setInterval(()=>{
+  if(!alive)return;
+  if(left)player-=5;
+  if(right)player+=5;
+  player=Math.max(0,Math.min(280,player));
+  if(Math.random()<.07)blocks.push({x:Math.random()*290,y:0});
+  blocks.forEach(b=>b.y+=4);
+  blocks=blocks.filter(b=>b.y<300);
+  if(blocks.some(b=>b.x<player+40&&b.x+25>player&&b.y<290&&b.y+25>270)){
+   alive=false;
+   clearInterval(currentTimer);currentTimer=null;
+   msg(s,'Game over! Score: '+score);
+   btn(s,'Play Again',()=>dodgeBlocks(s));
+   return;
+  }
+  score++;
+  s.querySelector('#score').textContent='Score: '+score;
+  ctx.fillStyle='#09131a';ctx.fillRect(0,0,320,300);
+  ctx.fillStyle='#e6b85c';ctx.fillRect(player,270,40,20);
+  ctx.fillStyle='#e35d5d';blocks.forEach(b=>ctx.fillRect(b.x,b.y,25,25));
  },40);
 }
 
-function pong(){
- gameBox("Pong Mini",`<canvas id="pongCanvas" width="300" height="220" style="background:#10182c;max-width:100%"></canvas><p><button onclick="pongMove(-1)">LEFT</button><button onclick="pongMove(1)">RIGHT</button></p><p id="pongScore">Score: 0</p>`);
- let c=document.getElementById("pongCanvas"),ctx=c.getContext("2d"),x=125,bx=100,by=80,vx=3,vy=3,score=0,over=false;
- window.pongMove=d=>x=Math.max(0,Math.min(250,x+d*20));
- window.pongTimer=setInterval(()=>{
-  if(over)return;bx+=vx;by+=vy;if(bx<5||bx>295)vx=-vx;if(by<5)vy=-vy;
-  if(by>195&&bx>x&&bx<x+50){vy=-Math.abs(vy);score++;document.getElementById("pongScore").textContent="Score: "+score}
-  if(by>220){over=true;clearInterval(window.pongTimer);alert("Game over!")}
-  ctx.clearRect(0,0,300,220);ctx.fillStyle="white";ctx.fillRect(x,205,50,8);ctx.beginPath();ctx.arc(bx,by,7,0,7);ctx.fill();
- },30);
-}
-
-function brick(){
- gameBox("Brick Breaker",`<canvas id="brickCanvas" width="300" height="300" style="background:#10182c;max-width:100%"></canvas><p><button onclick="brickMove(-1)">LEFT</button><button onclick="brickMove(1)">RIGHT</button></p><p id="brickScore">Score: 0</p>`);
- let c=document.getElementById("brickCanvas"),ctx=c.getContext("2d"),x=120,bx=150,by=220,vx=3,vy=-3,score=0,bricks=Array.from({length:15},(_,i)=>({x:(i%5)*58+5,y:Math.floor(i/5)*25+20,on:true})),over=false;
- window.brickMove=d=>x=Math.max(0,Math.min(250,x+d*20));
- window.brickTimer=setInterval(()=>{
-  if(over)return;bx+=vx;by+=vy;if(bx<5||bx>295)vx=-vx;if(by<5)vy=-vy;
-  if(by>270&&bx>x&&bx<x+50)vy=-Math.abs(vy);
-  bricks.forEach(b=>{if(b.on&&bx>b.x&&bx<b.x+50&&by>b.y&&by<b.y+18){b.on=false;vy=-vy;score++;document.getElementById("brickScore").textContent="Score: "+score}});
-  if(by>300||bricks.every(b=>!b.on)){over=true;clearInterval(window.brickTimer);alert("Finished! Score: "+score)}
-  ctx.clearRect(0,0,300,300);ctx.fillStyle="white";ctx.fillRect(x,280,50,8);ctx.beginPath();ctx.arc(bx,by,6,0,7);ctx.fill();ctx.fillStyle="#00e5ff";bricks.forEach(b=>{if(b.on)ctx.fillRect(b.x,b.y,50,18)});
- },30);
-}
-
-function catchStar(){
- let score=0;
- gameBox("Catch The Star",`<p>Score: <span id="starScore">0</span></p><div style="height:220px;background:#10182c;position:relative"><button id="starDot" style="position:absolute" onclick="starHit()">★</button></div>`);
- window.starHit=()=>{score++;document.getElementById("starScore").textContent=score;let d=document.getElementById("starDot");d.style.left=Math.random()*85+"%";d.style.top=Math.random()*85+"%"};
-}
-
-function g2048(){
- let b=Array(16).fill(0);b[5]=2;
- gameBox("2048 Mini",`<div id="board2048" style="display:grid;grid-template-columns:repeat(4,55px);gap:5px;justify-content:center"></div><p><button onclick="move2048('left')">LEFT</button><button onclick="move2048('right')">RIGHT</button><button onclick="move2048('up')">UP</button><button onclick="move2048('down')">DOWN</button></p>`);
- function draw(){document.getElementById("board2048").innerHTML=b.map(v=>`<div style="height:55px;background:#26334d;display:grid;place-items:center;font-size:20px">${v||""}</div>`).join("")}
- window.move2048=dir=>{
-  for(let r=0;r<4;r++){
-   let ids=dir==="left"||dir==="right"?Array.from({length:4},(_,i)=>r*4+(dir==="left"?i:3-i)):Array.from({length:4},(_,i)=>(dir==="up"?i:3-i)*4+r);
-   let vals=ids.map(i=>b[i]).filter(Boolean);
-   for(let i=0;i<vals.length-1;i++){if(vals[i]===vals[i+1]){vals[i]*=2;vals.splice(i+1,1)}}
-   while(vals.length<4)vals.push(0);ids.forEach((id,i)=>b[id]=vals[i]);
-  }
-  let e=b.map((v,i)=>v===0?i:-1).filter(i=>i>=0);if(e.length)b[e[Math.floor(Math.random()*e.length)]]=2;draw();
- };
- draw();
-}
-
-function lights(){
- let on=Array(9).fill(false);
- gameBox("Lights Puzzle",`<div id="lightsGrid" style="display:grid;grid-template-columns:repeat(3,65px);gap:5px;justify-content:center"></div><p>Turn all lights off!</p>`);
- window.lightPress=i=>{[i,i-3,i+3,i%3?i-1:-1,i%3!==2?i+1:-1].forEach(j=>{if(j>=0&&j<9)on[j]=!on[j]});draw()};
- function draw(){document.getElementById("lightsGrid").innerHTML=on.map((v,i)=>`<button style="height:60px;background:${v?"#ffdf45":"#26334d"}" onclick="lightPress(${i})">${v?"ON":"OFF"}</button>`).join("")}
- on[1]=on[3]=on[5]=true;draw();
-}
-
-function quick(){
- let n=0;
- gameBox("Quick Click",`<h1 id="quickScore">0</h1><button onclick="quickAdd()">CLICK!</button>`);
- window.quickAdd=()=>document.getElementById("quickScore").textContent=++n;
-}
-
-function target(){
- let score=0;
- gameBox("Target Practice",`<p>Score: <span id="targetScore">0</span></p><div style="height:220px;background:#10182c;position:relative"><button id="targetDot" style="position:absolute" onclick="targetHit()">●</button></div>`);
- window.targetHit=()=>{score++;document.getElementById("targetScore").textContent=score;let d=document.getElementById("targetDot");d.style.left=Math.random()*85+"%";d.style.top=Math.random()*85+"%"};
-}
-
-
-function start3d(i){
- const gameName=games3[i]||"3D Runner";
-
- gameBox(gameName,`
-  <h3>${gameName}</h3>
-  <p>3D-style endless runner</p>
-  <canvas id="world3d" width="340" height="420"
-    style="width:100%;max-width:340px;background:#101a35;border:2px solid #00e5ff;border-radius:10px">
-  </canvas>
-  <h3>Score: <span id="worldScore">0</span></h3>
-  <p>
-   <button onclick="worldMove(-1)">LEFT</button>
-   <button onclick="worldMove(1)">RIGHT</button>
-   <button onclick="worldJump()">JUMP</button>
-  </p>
-  <p>Use buttons to avoid the red blocks.</p>
- `);
-
- const canvas=document.getElementById("world3d");
- const ctx=canvas.getContext("2d");
-
- let lane=1;
- let obstacles=[];
- let score=0;
- let jump=0;
- let finished=false;
- let frame=0;
-
- window.worldMove=(direction)=>{
-  lane=Math.max(0,Math.min(2,lane+direction));
- };
-
- window.worldJump=()=>{
-  if(jump===0)jump=90;
- };
-
- function drawRoad(){
-  ctx.fillStyle="#101a35";
-  ctx.fillRect(0,0,340,420);
-
-  ctx.fillStyle="#354567";
-  ctx.beginPath();
-  ctx.moveTo(105,0);
-  ctx.lineTo(235,0);
-  ctx.lineTo(340,420);
-  ctx.lineTo(0,420);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.strokeStyle="#ffffff";
-  ctx.lineWidth=2;
-  ctx.setLineDash([15,15]);
-
-  ctx.beginPath();
-  ctx.moveTo(150,0);
-  ctx.lineTo(115,420);
-  ctx.moveTo(190,0);
-  ctx.lineTo(225,420);
-  ctx.stroke();
-
-  ctx.setLineDash([]);
+function game2048(s){
+ let grid=Array(16).fill(0);
+ function add(){
+  let empty=grid.map((v,i)=>v===0?i:-1).filter(i=>i>=0);
+  if(empty.length)grid[empty[Math.floor(Math.random()*empty.length)]]=Math.random()<.9?2:4;
  }
-
- function drawPlayer(){
-  let x=170+(lane-1)*70;
-  let y=355-jump;
-
-  ctx.fillStyle="#00e5ff";
-  ctx.fillRect(x-15,y,30,42);
-
-  ctx.fillStyle="#ffffff";
-  ctx.fillRect(x-8,y+8,6,6);
-  ctx.fillRect(x+3,y+8,6,6);
- }
-
- function drawObstacles(){
-  obstacles.forEach(o=>{
-   let depth=o.depth;
-   let size=12+depth*.17;
-   let y=depth;
-   let x=170+(o.lane-1)*(10+depth*.17);
-
-   ctx.fillStyle="#ff4141";
-   ctx.fillRect(x-size/2,y,size,size);
-
-   if(y>340&&y<405&&o.lane===lane&&jump<35){
-    finished=true;
-    clearInterval(window.worldTimer);
-    alert("Game Over! Score: "+Math.floor(score/10));
-   }
+ function draw(){
+  s.innerHTML='<h3>2048 Mini</h3><p>Join matching numbers to reach 2048.</p><div id="board" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-width:320px;margin:15px auto"></div><p id="status">Use the arrow buttons.</p>';
+  let board=s.querySelector('#board');
+  grid.forEach(v=>{
+   let cell=document.createElement('div');
+   cell.style.cssText='height:65px;background:#263945;border-radius:7px;display:grid;place-items:center;font:bold 22px Arial;color:#e6b85c';
+   cell.textContent=v||'';
+   board.appendChild(cell);
   });
+  ['UP','DOWN','LEFT','RIGHT'].forEach(d=>btn(s,d,()=>move(d)));
  }
-
- function update(){
-  if(finished)return;
-
-  frame++;
-
-  drawRoad();
-
-  if(frame%45===0){
-   obstacles.push({
-    lane:Math.floor(Math.random()*3),
-    depth:0
-   });
+ function move(dir){
+  let old=grid.slice();
+  for(let line=0;line<4;line++){
+   let ids=[];
+   for(let j=0;j<4;j++){
+    let r=dir==='UP'?j:dir==='DOWN'?3-j:line;
+    let c=dir==='LEFT'?j:dir==='RIGHT'?3-j:line;
+    ids.push(r*4+c);
+   }
+   let vals=ids.map(i=>grid[i]).filter(Boolean);
+   for(let j=0;j<vals.length-1;j++){
+    if(vals[j]===vals[j+1]){
+     vals[j]*=2;vals.splice(j+1,1);
+    }
+   }
+   while(vals.length<4)vals.push(0);
+   ids.forEach((id,j)=>grid[id]=vals[j]);
   }
-
-  obstacles.forEach(o=>o.depth+=3);
-  obstacles=obstacles.filter(o=>o.depth<430);
-
-  drawObstacles();
-  drawPlayer();
-
-  if(jump>0)jump-=6;
-
-  score++;
-  document.getElementById("worldScore").textContent=Math.floor(score/10);
+  if(grid.every((v,i)=>v===old[i])){
+   s.querySelector('#status').textContent='No move available in that direction.';
+   return;
+  }
+  if(grid.includes(2048)){
+   draw();s.querySelector('#status').textContent='You reached 2048!';return;
+  }
+  add();draw();
  }
-
- clearInterval(window.worldTimer);
- window.worldTimer=setInterval(update,40);
+ add();add();draw();
+ btn(s,'RESTART',()=>game2048(s));
 }
 
-// ===== STOP RUNNING GAMES WHEN EXITING =====
+function lightsOut(s){
+ let board=Array.from({length:25},()=>Math.random()<.5);
+ s.innerHTML='<h3>Lights Out</h3><p>Turn all lights off. Tap a tile to switch it and its neighbours.</p><div id="lights" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:300px;margin:15px auto"></div><p id="status">Lights remaining: 0</p>';
+ let area=s.querySelector('#lights');
+ function draw(){
+  area.innerHTML='';
+  board.forEach((on,i)=>{
+   let b=document.createElement('button');
+   b.style.cssText='height:48px;margin:0;padding:0;background:'+(on?'#e6b85c':'#263945')+';border:1px solid #53636d';
+   b.textContent=on?'●':'';
+   b.onclick=()=>{
+    let r=Math.floor(i/5),c=i%5;
+    [[r,c],[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(([y,x])=>{
+     if(y>=0&&y<5&&x>=0&&x<5)board[y*5+x]=!board[y*5+x];
+    });
+    draw();
+   };
+   area.appendChild(b);
+  });
+  let count=board.filter(Boolean).length;
+  s.querySelector('#status').textContent='Lights remaining: '+count;
+  if(count===0)s.querySelector('#status').textContent='You solved the puzzle!';
+ }
+ draw();
+ btn(s,'NEW PUZZLE',()=>lightsOut(s));
+}
 
-const originalBack=back;
+function typingSprint(s){
+ const words=['GAMING','ARCADE','PUZZLE','COMPUTER','PLAYER','SCORE','CHALLENGE','VICTORY','KEYBOARD','SCREEN'];
+ let word='',score=0,time=20;
+ s.innerHTML='<h3>Typing Sprint</h3><div class="big" id="word"></div><input id="typed" placeholder="Type the word"><p id="time">Time: 20</p><p id="score">Score: 0</p>';
+ function next(){
+  word=words[Math.floor(Math.random()*words.length)];
+  s.querySelector('#word').textContent=word;
+  s.querySelector('#typed').value='';
+  s.querySelector('#typed').focus();
+ }
+ btn(s,'SUBMIT',()=>{
+  if(time<=0)return;
+  if(s.querySelector('#typed').value.trim().toUpperCase()===word)score++;
+  s.querySelector('#score').textContent='Score: '+score;
+  next();
+ });
+ next();
+ currentTimer=setInterval(()=>{
+  time--;
+  s.querySelector('#time').textContent='Time: '+time;
+  if(time<=0){
+   clearInterval(currentTimer);currentTimer=null;
+   msg(s,'Time up! Words typed correctly: '+score);
+   btn(s,'Play Again',()=>typingSprint(s));
+  }
+ },1000);
+}
 
-back=function(){
- clearInterval(window.snakeTimer);
- clearInterval(window.dodgeTimer);
- clearInterval(window.pongTimer);
- clearInterval(window.brickTimer);
- clearInterval(window.worldTimer);
- clearTimeout(window.reactTimer);
+function quickQuiz(s){
+ const questions=[
+  ['How many days are in a week?', '7',['5','6','7','8']],
+  ['Which planet is known as the Red Planet?','Mars',['Earth','Mars','Venus','Jupiter']],
+  ['What is 9 x 8?','72',['64','72','81','96']],
+  ['Which animal is known as the king of the jungle?','Lion',['Tiger','Elephant','Lion','Wolf']],
+  ['How many sides does a triangle have?','3',['2','3','4','5']],
+  ['Which is the largest ocean?','Pacific',['Atlantic','Indian','Arctic','Pacific']]
+ ];
+ let index=0,score=0;
+ function show(){
+  if(index>=questions.length){
+   msg(s,'Quiz finished! Score: '+score+'/'+questions.length);
+   btn(s,'Play Again',()=>quickQuiz(s));
+   return;
+  }
+  let q=questions[index];
+  s.innerHTML='<h3>Question '+(index+1)+' of '+questions.length+'</h3><p>'+q[0]+'</p><div id="answers"></div><p id="result"></p>';
+  q[2].forEach(a=>btn(s.querySelector('#answers'),a,()=>{
+   if(a===q[1]){
+    score++;
+    s.querySelector('#result').textContent='Correct!';
+   }else{
+    s.querySelector('#result').textContent='Correct answer: '+q[1];
+   }
+   index++;
+   btn(s,'NEXT',show);
+  }));
+ }
+ show();
+}
 
- originalBack();
-};
+function targetClick(s){
+ let score=0,time=20;
+ s.innerHTML='<h3>Target Click</h3><p>Hit the target as many times as possible!</p><div id="field" style="height:240px;position:relative;background:#263945;border-radius:10px"></div><p id="score">Score: 0</p><p id="time">Time: 20</p>';
+ let field=s.querySelector('#field');
+ let target=document.createElement('button');
+ target.textContent='●';
+ target.style.cssText='position:absolute;margin:0;width:48px;height:48px;border-radius:50%;padding:0;font-size:25px';
+ field.appendChild(target);
+ function move(){
+  target.style.left=Math.random()*Math.max(0,field.clientWidth-48)+'px';
+  target.style.top=Math.random()*190+'px';
+ }
+ target.onclick=()=>{
+  if(time<=0)return;
+  score++;
+  s.querySelector('#score').textContent='Score: '+score;
+  move();
+ };
+ move();
+ currentTimer=setInterval(()=>{
+  time--;
+  s.querySelector('#time').textContent='Time: '+time;
+  if(time<=0){
+   clearInterval(currentTimer);currentTimer=null;
+   msg(s,'Time up! Your score: '+score);
+   btn(s,'Play Again',()=>targetClick(s));
+  }
+ },1000);
+}
 
-// ===== FINAL INITIALIZATION =====
+// Fix odd-one-out game
+function oddOneOut(s){
+ let groups=[
+  ['Apple','Banana','Car','Mango'],
+  ['Cat','Dog','Chair','Tiger'],
+  ['Red','Blue','Circle','Green'],
+  ['Bus','Train','Plane','Potato']
+ ];
+ let group=groups[Math.floor(Math.random()*groups.length)];
+ let answer=group.find(x=>['Car','Chair','Circle','Potato'].includes(x));
+ s.innerHTML='<h3>Find the odd one out</h3><p>Choose the item that does not belong.</p><div id="choices"></div><p id="result"></p>';
+ group.sort(()=>Math.random()-.5).forEach(x=>btn(s.querySelector('#choices'),x,()=>{
+  s.querySelector('#result').textContent=x===answer?'Correct!':'Not quite. Try again!';
+ }));
+ btn(s,'New Puzzle',()=>oddOneOut(s));
+}
 
-render();
+// Connect all 25 games
+const games=[
+ ticTacToe,
+ rockPaperScissors,
+ guessNumber,
+ tapCounter,
+ reactionTest,
+ memoryMatch,
+ mathSprint,
+ wordScramble,
+ colorMatch,
+ higherLower,
+ diceDuel,
+ coinFlip,
+ numberSequence,
+ oddOneOut,
+ whackDot,
+ snakeGame,
+ pongGame,
+ breakoutGame,
+ catchStars,
+ dodgeBlocks,
+ game2048,
+ lightsOut,
+ typingSprint,
+ quickQuiz,
+ targetClick
+];
 
-// ===== END OF ZIYAN GAMING CODE =====
- 
+// Start website
+showGames('all');
+  
 
- 
+
 </script>
 </body>
 </html>
