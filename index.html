@@ -3,27 +3,34 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZIYAN GAMING</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#080b16;color:white;font-family:Arial}
-header{text-align:center;padding:25px;background:#11172c;border-bottom:2px solid #7654ff}
-header h1{color:#a78bfa;margin:0;font-size:30px}
-header p{color:#aaa}
-.search{text-align:center;padding:18px}
-input{width:95%;max-width:550px;padding:14px;border-radius:12px;background:#171d35;color:white;border:1px solid #7654ff}
-.categories{display:flex;gap:9px;padding:12px;overflow:auto}
-.categories button,.game button,.back,#start{background:#7654ff;color:white;border:0;border-radius:9px;padding:12px}
+header{text-align:center;padding:24px;background:#11172c;border-bottom:2px solid #7654ff}
+header h1{margin:0;color:#a78bfa;font-size:30px}
+header p{color:#aaa;margin-bottom:0}
+#home{padding:14px}
+input{width:100%;padding:14px;background:#171d35;color:white;border:1px solid #7654ff;border-radius:10px;font-size:16px}
+.categories{display:flex;gap:8px;overflow:auto;padding:14px 0}
 .categories button{white-space:nowrap}
-.games{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
-.game{background:#171d30;border-radius:13px;overflow:hidden;border:1px solid #303856}
-.game img{width:100%;height:120px;object-fit:cover}
-.game h3{margin:10px;font-size:15px}
+button{background:#7654ff;color:white;border:0;border-radius:9px;padding:12px;font-weight:bold;cursor:pointer}
+button:active{opacity:.7}
+.games{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.game{background:#171d30;border:1px solid #303856;border-radius:13px;overflow:hidden}
+.art{height:105px;display:grid;place-items:center;font-size:48px;background:linear-gradient(135deg,#29204e,#101a34)}
+.game h3{font-size:15px;margin:10px}
+.game small{display:block;color:#aaa;margin:0 10px 10px}
 .game button{width:calc(100% - 20px);margin:0 10px 12px}
-#player{display:none;padding:15px;text-align:center}
-canvas{background:#050505;width:100%;max-width:400px;border:2px solid #7654ff;border-radius:10px}
-#score{font-size:20px}
+#player{display:none;padding:14px;text-align:center}
+#stage{max-width:420px;margin:15px auto}
+#stage canvas{width:100%;max-width:360px;background:#090d19;border:2px solid #7654ff;border-radius:10px;touch-action:none}
+#stage button{margin:4px}
+#stage input{margin:8px 0}
+#score{font-size:19px;margin:12px}
+#controls{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+.back{margin-bottom:10px}
 footer{text-align:center;padding:25px;color:#888}
 </style>
 </head>
@@ -34,114 +41,300 @@ footer{text-align:center;padding:25px;color:#888}
 </header>
 
 <div id="home">
-<div class="search">
-<input id="search" placeholder="Search your favourite game..." oninput="render()">
-</div>
-<div class="categories">
-<button onclick="setCategory('All')">All Games</button>
-<button onclick="setCategory('Arcade')">Arcade</button>
-<button onclick="setCategory('Racing')">Racing</button>
-<button onclick="setCategory('Action')">Action</button>
-</div>
-<h2 style="padding-left:15px">Explore Games</h2>
+<input id="search" placeholder="Search games..." oninput="render()">
+<div class="categories" id="categories"></div>
+<h2>Explore Games</h2>
 <div class="games" id="games"></div>
 </div>
 
 <div id="player">
-<button class="back" onclick="closeGame()">← Back to Games</button>
-<h2 id="gameTitle">Snake Game</h2>
-<p id="score">Score: 0</p>
-<canvas id="board" width="320" height="320"></canvas>
-<p><button id="start" onclick="startGame()">START GAME</button></p>
-<p>Use arrow keys or buttons to move</p>
-<div>
-<button onclick="move(0,-1)">↑</button><br>
-<button onclick="move(-1,0)">←</button>
-<button onclick="move(0,1)">↓</button>
-<button onclick="move(1,0)">→</button>
-</div>
+<button class="back" onclick="goHome()">← BACK TO GAMES</button>
+<button onclick="fullScreen()">FULL SCREEN</button>
+<h2 id="gameTitle"></h2>
+<div id="score"></div>
+<div id="stage"></div>
+<div id="controls"></div>
 </div>
 
 <footer>© 2026 ZIYAN GAMING</footer>
 
 <script>
-const games=[
-{name:"Snake Game",cat:"Arcade",img:"https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500"},
-{name:"Car Racing",cat:"Racing",img:"https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=500"},
-{name:"Space Game",cat:"Action",img:"https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=500"},
-{name:"Arcade Fun",cat:"Arcade",img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500"}
+const categories=["All","Arcade","Racing","Puzzle","Sports","Adventure","Classic"];
+const icons=["🐍","🏎️","🧠","⚽","🚀","🎯","🧩","🏀","🐦","🧱"];
+const names=[
+"Snake Master","Speed Racer","2048 Master","Football Challenge","Space Explorer",
+"Target Tap","Memory Cards","Basketball Star","Flappy Sky","Brick Breaker",
+"Snake Classic","Turbo Racing","Number Merge","Penalty Kick","Galaxy Quest",
+"Reaction Test","Color Match","Mini Tennis","Sky Jumper","Block Puzzle",
+"Math Challenge","Car Dodger","Word Puzzle","Hoop Master","Treasure Hunt",
+"Quick Tap","Pattern Memory","Table Tennis","Star Catcher","Tic Tac Toe"
 ];
-let category="All";
+const cats=[
+"Arcade","Racing","Puzzle","Sports","Adventure",
+"Arcade","Puzzle","Sports","Adventure","Classic",
+"Arcade","Racing","Puzzle","Sports","Adventure",
+"Classic","Puzzle","Sports","Adventure","Classic",
+"Puzzle","Racing","Puzzle","Sports","Adventure",
+"Arcade","Puzzle","Sports","Adventure","Classic"
+];
+const types=[
+"snake","tap","2048","tic","memory",
+"tap","memory","tic","tap","tap",
+"snake","tap","2048","tic","memory",
+"reaction","memory","tic","tap","2048",
+"math","tap","math","tic","memory",
+"tap","memory","tic","tap","tic"
+];
+let currentCategory="All";
+let timer=null;
+let gameNumber=0;
+
 function render(){
 let q=document.getElementById("search").value.toLowerCase();
-let list=games.filter(g=>(category==="All"||g.cat===category)&&g.name.toLowerCase().includes(q));
+let list=names.map((name,i)=>({name,cat:cats[i],i}))
+.filter(g=>(currentCategory==="All"||g.cat===currentCategory)&&g.name.toLowerCase().includes(q));
 document.getElementById("games").innerHTML=list.map(g=>`
 <div class="game">
-<img src="${g.img}">
+<div class="art">${icons[g.i%icons.length]}</div>
 <h3>${g.name}</h3>
-<button onclick="openGame('${g.name}')">PLAY NOW</button>
+<small>${g.cat}</small>
+<button onclick="openGame(${g.i})">PLAY NOW</button>
 </div>`).join("");
 }
-function setCategory(c){category=c;render()}
-function openGame(name){
-document.getElementById("home").style.display="none";
-document.getElementById("player").style.display="block";
-document.getElementById("gameTitle").innerText=name;
-resetGame();
+function makeCategories(){
+document.getElementById("categories").innerHTML=categories.map(c=>
+`<button onclick="setCategory('${c}')">${c}</button>`).join("");
 }
-function closeGame(){
-stopGame();
+function setCategory(c){currentCategory=c;render()}
+function stop(){if(timer){clearInterval(timer);timer=null}}
+function goHome(){
+stop();
 document.getElementById("player").style.display="none";
 document.getElementById("home").style.display="block";
 }
-const canvas=document.getElementById("board");
-const ctx=canvas.getContext("2d");
-let snake,food,dx,dy,score,timer;
-function resetGame(){
-stopGame();
-snake=[{x:8,y:8}];
-food={x:14,y:14};
-dx=1;dy=0;score=0;
-draw();
-document.getElementById("score").innerText="Score: 0";
+function fullScreen(){
+let el=document.getElementById("player");
+if(el.requestFullscreen)el.requestFullscreen();
+}
+function openGame(i){
+stop();gameNumber=i;
+document.getElementById("home").style.display="none";
+document.getElementById("player").style.display="block";
+document.getElementById("gameTitle").innerText=names[i];
+document.getElementById("stage").innerHTML="";
+document.getElementById("controls").innerHTML="";
+document.getElementById("score").innerText="";
+let type=types[i];
+if(type==="snake")snakeGame();
+if(type==="tap")tapGame();
+if(type==="memory")memoryGame();
+if(type==="tic")ticGame();
+if(type==="2048")mergeGame();
+if(type==="reaction")reactionGame();
+if(type==="math")mathGame();
+}
+
+// TAP GAME
+function tapGame(){
+let count=0,time=15;
+let s=document.getElementById("stage");
+s.innerHTML='<h3>Tap as many times as you can!</h3><button id="tap" style="font-size:28px;padding:30px">TAP!</button>';
+document.getElementById("score").innerText="Time: 15 | Score: 0";
+document.getElementById("tap").onclick=()=>{
+count++;
+document.getElementById("score").innerText="Time: "+time+" | Score: "+count;
+};
+timer=setInterval(()=>{
+time--;
+document.getElementById("score").innerText="Time: "+time+" | Score: "+count;
+if(time<=0){stop();s.innerHTML+="<h2>Time up! Score: "+count+"</h2>";}
+},1000);
+}
+
+// REACTION GAME
+function reactionGame(){
+let ready=false,start=0;
+let s=document.getElementById("stage");
+s.innerHTML='<p>Press start. Wait for green, then tap!</p><button id="react" style="padding:35px">START</button>';
+let b=document.getElementById("react");
+b.onclick=()=>{
+if(b.dataset.wait==="yes"){
+if(!ready){b.innerText="Too early! Try again";b.dataset.wait="";return;}
+let ms=Date.now()-start;
+b.innerText=ms+" ms";
+document.getElementById("score").innerText="Your reaction: "+ms+" ms";
+ready=false;b.dataset.wait="";
+}else{
+b.innerText="WAIT...";
+b.style.background="#c44";
+b.dataset.wait="yes";
+let delay=1000+Math.random()*3000;
+timer=setTimeout(()=>{
+ready=true;start=Date.now();b.innerText="TAP NOW!";
+b.style.background="#20a060";
+},delay);
+}
+};
+}
+
+// MEMORY GAME
+function memoryGame(){
+let vals=["🍎","🚗","⭐","🐱","⚽","🍕","🌈","🎮"];
+let deck=[...vals,...vals].sort(()=>Math.random()-.5);
+let first=null,lock=false,matched=0,moves=0;
+let s=document.getElementById("stage");
+s.innerHTML='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px" id="mem"></div>';
+let grid=document.getElementById("mem");
+deck.forEach((v,i)=>{
+let b=document.createElement("button");
+b.textContent="?";b.style.fontSize="24px";b.style.padding="18px 4px";
+b.onclick=()=>{
+if(lock||b.dataset.open||b.dataset.done)return;
+b.textContent=v;b.dataset.open="yes";
+if(!first){first=b;return;}
+moves++;
+if(first.textContent===b.textContent){
+first.dataset.done="yes";b.dataset.done="yes";
+first=null;matched++;
+if(matched===8)document.getElementById("score").innerText="You won in "+moves+" moves!";
+}else{
+lock=true;let old=first;
+setTimeout(()=>{old.textContent="?";b.textContent="?";delete old.dataset.open;delete b.dataset.open;first=null;lock=false;},700);
+}
+document.getElementById("score").innerText="Moves: "+moves;
+};
+grid.appendChild(b);
+});
+}
+
+// TIC TAC TOE
+function ticGame(){
+let board=Array(9).fill(""),turn="X";
+let s=document.getElementById("stage");
+s.innerHTML='<div id="tic" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div><button onclick="openGame(gameNumber)">RESTART</button>';
+let grid=document.getElementById("tic");
+function win(){
+let lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+return lines.some(l=>board[l[0]]&&board[l[0]]===board[l[1]]&&board[l[1]]===board[l[2]]);
+}
+board.forEach((v,i)=>{
+let b=document.createElement("button");b.style.fontSize="30px";b.style.aspectRatio="1";
+b.onclick=()=>{
+if(board[i]||win())return;
+board[i]=turn;b.textContent=turn;
+if(win()){document.getElementById("score").innerText=turn+" wins!";return;}
+if(board.every(Boolean)){document.getElementById("score").innerText="Draw!";return;}
+turn=turn==="X"?"O":"X";
+document.getElementById("score").innerText="Turn: "+turn;
+};
+grid.appendChild(b);
+});
+document.getElementById("score").innerText="Turn: X";
+}
+
+// 2048
+function mergeGame(){
+let board=Array(16).fill(0);
+let s=document.getElementById("stage");
+s.innerHTML='<div id="b2048" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:#333;padding:7px;border-radius:10px"></div><p>Use arrow keys or buttons</p>';
+let grid=document.getElementById("b2048");
+function add(){
+let empty=board.map((v,i)=>v? -1:i).filter(i=>i>=0);
+if(empty.length)board[empty[Math.floor(Math.random()*empty.length)]]=2;
 }
 function draw(){
-ctx.fillStyle="#050505";
-ctx.fillRect(0,0,320,320);
-ctx.fillStyle="#35e879";
-snake.forEach(p=>ctx.fillRect(p.x*16,p.y*16,14,14));
-ctx.fillStyle="#ff4545";
-ctx.fillRect(food.x*16,food.y*16,14,14);
+grid.innerHTML="";
+board.forEach(v=>{
+let d=document.createElement("div");
+d.style.cssText="aspect-ratio:1;display:grid;place-items:center;background:"+(v?"#7654ff":"#555")+";border-radius:6px;font-size:21px;font-weight:bold";
+d.textContent=v||"";grid.appendChild(d);
+});
+document.getElementById("score").innerText="2048 Puzzle";
 }
-function move(x,y){
-if(x!==-dx||y!==-dy){dx=x;dy=y;}
+function move(dir){
+let old=board.join(",");
+for(let n=0;n<4;n++){
+let ids=[];
+for(let j=0;j<4;j++){
+let r=dir==="left"?n:dir==="right"?n: j;
+let c=dir==="left"?j:dir==="right"?3-j:dir==="up"?n:3-n;
+if(dir==="up"||dir==="down"){r=dir==="up"?j:3-j;c=n;}
+ids.push(r*4+c);
 }
-function startGame(){
-resetGame();
+let vals=ids.map(i=>board[i]).filter(Boolean);
+for(let k=0;k<vals.length-1;k++)if(vals[k]===vals[k+1]){vals[k]*=2;vals.splice(k+1,1);}
+while(vals.length<4)vals.push(0);
+ids.forEach((id,k)=>board[id]=vals[k]);
+}
+if(old!==board.join(","))add();
+draw();
+}
+document.onkeydown=e=>{
+if(current!=="2048")return;
+let d={ArrowLeft:"left",ArrowRight:"right",ArrowUp:"up",ArrowDown:"down"}[e.key];
+if(d)move(d);
+};
+["↑","↓","←","→"].forEach((v,i)=>{
+let b=document.createElement("button");b.textContent=v;
+b.onclick=()=>move(["up","down","left","right"][i]);
+document.getElementById("controls").appendChild(b);
+});
+add();add();draw();
+}
+
+// MATH GAME
+function mathGame(){
+let a=Math.ceil(Math.random()*20),b=Math.ceil(Math.random()*20),answer=a+b;
+let s=document.getElementById("stage");
+s.innerHTML="<h2>"+a+" + "+b+" = ?</h2><input id='answer' type='number' placeholder='Your answer'><button id='check'>CHECK</button>";
+document.getElementById("check").onclick=()=>{
+document.getElementById("score").innerText=Number(document.getElementById("answer").value)===answer?"Correct!":"Try again!";
+};
+}
+
+// SNAKE
+function snakeGame(){
+let s=document.getElementById("stage");
+s.innerHTML='<canvas id="snake" width="320" height="320"></canvas><p>Use arrow keys or buttons</p><button onclick="openGame(gameNumber)">RESTART</button>';
+let c=document.getElementById("snake"),ctx=c.getContext("2d");
+let body=[{x:8,y:8}],food={x:14,y:12},dx=1,dy=0,points=0;
+function direction(x,y){if(x!==-dx||y!==-dy){dx=x;dy=y;}}
+["↑","↓","←","→"].forEach((v,i)=>{
+let b=document.createElement("button");b.textContent=v;
+b.onclick=()=>direction([[0,-1],[0,1],[-1,0],[1,0]][i][0],[[0,-1],[0,1],[-1,0],[1,0]][i][1]);
+document.getElementById("controls").appendChild(b);
+});
+document.onkeydown=e=>{
+if(current!=="snake")return;
+if(e.key==="ArrowUp")direction(0,-1);
+if(e.key==="ArrowDown")direction(0,1);
+if(e.key==="ArrowLeft")direction(-1,0);
+if(e.key==="ArrowRight")direction(1,0);
+};
+function draw(){
+ctx.fillStyle="#050505";ctx.fillRect(0,0,320,320);
+ctx.fillStyle="#35e879";body.forEach(p=>ctx.fillRect(p.x*16,p.y*16,14,14));
+ctx.fillStyle="#ff4545";ctx.fillRect(food.x*16,food.y*16,14,14);
+}
+loop();
+function loop(){
 timer=setInterval(()=>{
-let head={x:snake[0].x+dx,y:snake[0].y+dy};
-if(head.x<0||head.x>=20||head.y<0||head.y>=20||
-snake.some(p=>p.x===head.x&&p.y===head.y)){
-stopGame();
-alert("Game Over! Score: "+score);
-return;
+let h={x:body[0].x+dx,y:body[0].y+dy};
+if(h.x<0||h.x>=20||h.y<0||h.y>=20||body.some(p=>p.x===h.x&&p.y===h.y)){
+stop();document.getElementById("score").innerText="Game Over! Score: "+points;return;
 }
-snake.unshift(head);
-if(head.x===food.x&&head.y===food.y){
-score+=10;
-document.getElementById("score").innerText="Score: "+score;
-food={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};
-}else{snake.pop()}
+body.unshift(h);
+if(h.x===food.x&&h.y===food.y){
+points+=10;food={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};
+}else body.pop();
+document.getElementById("score").innerText="Score: "+points;
 draw();
 },150);
 }
-function stopGame(){if(timer){clearInterval(timer);timer=null;}}
-document.addEventListener("keydown",e=>{
-if(e.key==="ArrowUp")move(0,-1);
-if(e.key==="ArrowDown")move(0,1);
-if(e.key==="ArrowLeft")move(-1,0);
-if(e.key==="ArrowRight")move(1,0);
-});
+draw();
+}
+
+makeCategories();
 render();
 </script>
 </body>
