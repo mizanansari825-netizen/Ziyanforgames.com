@@ -1,1 +1,449 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXORA AI — All AI Tools in One Place</title>
+<meta name="description" content="Explore AI tools for images, videos, voice, editing and creativity.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+ --bg:#080b14;
+ --panel:#101625;
+ --card:#121c2e;
+ --border:#243149;
+ --text:#f5f7ff;
+ --muted:#9ba9c0;
+ --blue:#637bff;
+ --cyan:#32d5e8;
+}
+body{
+ background:var(--bg);
+ color:var(--text);
+ font-family:Arial,Helvetica,sans-serif;
+ min-height:100vh;
+}
+header{
+ height:76px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 7%;
+ border-bottom:1px solid var(--border);
+ background:#0b1020;
+ position:sticky;
+ top:0;
+ z-index:10;
+}
+.logo{
+ font-size:25px;
+ font-weight:900;
+ letter-spacing:1px;
+}
+.logo span{color:var(--cyan)}
+nav{display:flex;gap:25px}
+nav a{
+ color:var(--muted);
+ text-decoration:none;
+ font-size:14px;
+}
+nav a:hover{color:white}
+.header-btn{
+ background:linear-gradient(120deg,var(--blue),var(--cyan));
+ color:white;
+ padding:11px 18px;
+ border:0;
+ border-radius:9px;
+ font-weight:bold;
+ cursor:pointer;
+}
+.hero{
+ text-align:center;
+ padding:85px 20px 65px;
+ background:radial-gradient(ellipse at top,#182750 0%,#080b14 65%);
+}
+.tag{
+ display:inline-block;
+ border:1px solid #354b80;
+ color:#9eafff;
+ background:#111c39;
+ padding:8px 15px;
+ border-radius:30px;
+ font-size:12px;
+ margin-bottom:25px;
+}
+.hero h1{
+ font-size:clamp(36px,6vw,65px);
+ line-height:1.12;
+ max-width:850px;
+ margin:auto;
+}
+.hero h1 span{
+ background:linear-gradient(90deg,#7185ff,#35d9e8);
+ -webkit-background-clip:text;
+ color:transparent;
+}
+.hero p{
+ color:var(--muted);
+ margin:22px auto 28px;
+ max-width:600px;
+ line-height:1.7;
+ font-size:16px;
+}
+.search{
+ max-width:610px;
+ margin:auto;
+ display:flex;
+ background:#111a2b;
+ border:1px solid #344361;
+ padding:7px;
+ border-radius:12px;
+}
+.search input{
+ flex:1;
+ min-width:0;
+ background:transparent;
+ border:0;
+ outline:0;
+ color:white;
+ padding:13px;
+ font-size:15px;
+}
+.search button{
+ background:var(--blue);
+ border:0;
+ color:white;
+ border-radius:8px;
+ padding:0 22px;
+ cursor:pointer;
+}
+.section{
+ padding:35px 7%;
+}
+.section-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ flex-wrap:wrap;
+ gap:15px;
+ margin-bottom:24px;
+}
+.section h2{font-size:27px}
+.section-head p{color:var(--muted);font-size:13px;margin-top:7px}
+.filters{
+ display:flex;
+ flex-wrap:wrap;
+ gap:10px;
+ margin-bottom:27px;
+}
+.filter{
+ border:1px solid var(--border);
+ background:var(--panel);
+ color:var(--muted);
+ padding:10px 16px;
+ border-radius:30px;
+ cursor:pointer;
+}
+.filter.active,.filter:hover{
+ background:#26376b;
+ color:white;
+ border-color:#657fff;
+}
+.tools{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:17px;
+}
+.tool{
+ background:linear-gradient(145deg,#151f32,#0e1523);
+ border:1px solid var(--border);
+ border-radius:15px;
+ padding:23px;
+ transition:.25s;
+ min-height:190px;
+}
+.tool:hover{
+ transform:translateY(-5px);
+ border-color:#637bff;
+ box-shadow:0 12px 35px #0006;
+}
+.tool-icon{
+ width:45px;height:45px;
+ display:grid;place-items:center;
+ background:#202e50;
+ border-radius:12px;
+ font-size:22px;
+ margin-bottom:17px;
+}
+.tool h3{font-size:17px;margin-bottom:9px}
+.tool p{
+ color:var(--muted);
+ font-size:13px;
+ line-height:1.6;
+ min-height:42px;
+}
+.tool button{
+ margin-top:17px;
+ background:transparent;
+ border:1px solid #465c91;
+ color:#aabaff;
+ border-radius:7px;
+ padding:9px 13px;
+ cursor:pointer;
+}
+.tool button:hover{background:#26376b;color:white}
+.empty{
+ display:none;
+ color:var(--muted);
+ text-align:center;
+ padding:35px;
+ grid-column:1/-1;
+}
+footer{
+ border-top:1px solid var(--border);
+ padding:30px 7%;
+ color:var(--muted);
+ text-align:center;
+ font-size:13px;
+ margin-top:50px;
+}
+#notice{
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#000b;
+ z-index:20;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+}
+.modal{
+ max-width:420px;
+ width:100%;
+ background:#121c2e;
+ border:1px solid #344361;
+ border-radius:16px;
+ padding:25px;
+}
+.modal h3{margin-bottom:12px}
+.modal p{color:var(--muted);line-height:1.6;font-size:14px}
+.modal button{
+ margin-top:20px;
+ background:var(--blue);
+ color:white;
+ border:0;
+ padding:10px 20px;
+ border-radius:8px;
+ cursor:pointer;
+}
+@media(max-width:650px){
+ header{padding:0 5%;height:65px}
+ nav{gap:12px}
+ nav a{font-size:12px}
+ .header-btn{display:none}
+ .hero{padding:65px 17px 45px}
+ .section{padding:30px 5%}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">NEXORA <span>AI</span></div>
+ <nav>
+  <a href="#home">Home</a>
+  <a href="#tools">AI Tools</a>
+  <a href="#about">About</a>
+ </nav>
+ <button class="header-btn" onclick="goToTools()">Explore Tools</button>
+</header>
+
+<section class="hero" id="home">
+ <div class="tag">✦ YOUR CREATIVE AI WORKSPACE</div>
+ <h1>One Platform.<br><span>Unlimited AI Possibilities.</span></h1>
+ <p>Create images, videos, voices and more with an all-in-one AI workspace. Discover tools designed to make creativity easier.</p>
+ <div class="search">
+  <input id="searchInput" type="text" placeholder="Search AI tools..." oninput="searchTools()">
+  <button onclick="searchTools()">Search</button>
+ </div>
+</section>
+
+<section class="section" id="tools">
+ <div class="section-head">
+  <div>
+   <h2>Explore AI Tools</h2>
+   <p>Choose a tool and start creating.</p>
+  </div>
+ </div>
+
+ <div class="filters">
+  <button class="filter active" data-filter="all">All Tools</button>
+  <button class="filter" data-filter="video">Video</button>
+  <button class="filter" data-filter="image">Image</button>
+  <button class="filter" data-filter="audio">Audio</button>
+  <button class="filter" data-filter="writing">Writing</button>
+  <button class="filter" data-filter="other">Other</button>
+ </div>
+
+ <div class="tools" id="toolGrid">
+
+  <div class="tool" data-category="video" data-name="AI Video Generator">
+   <div class="tool-icon">🎬</div>
+   <h3>AI Video Generator</h3>
+   <p>Turn text ideas into creative videos.</p>
+   <button onclick="openTool('AI Video Generator')">Open Tool →</button>
+  </div>
+
+  <div class="tool" data-category="image" data-name="AI Image Generator">
+   <div class="tool-icon">🎨</div>
+   <h3>AI Image Generator</h3>
+   <p>Create images from your text prompts.</p>
+   <button onclick="openTool('AI Image Generator')">Open Tool →</button>
+  </div>
+
+  <div class="tool" data-category="audio" data-name="AI Voice Generator">
+   <div class="tool-icon">🎙️</div>
+   <h3>AI Voice Generator</h3>
+   <p>Convert written text into spoken audio.</p>
+   <button onclick="openTool('AI Voice Generator')">Open Tool →</button>
+  </div>
+
+  <div class="tool" data-category="video" data-name="AI Video Editor">
+   <div class="tool-icon">✂️</div>
+   <h3>AI Video Editor</h3>
+   <p>Edit clips, add subtitles and create videos.</p>
+   <button onclick="openTool('AI Video Editor')">Open Tool →</button>
+  </div>
+
+  <div class="tool" data-category="other" data-name="AI Chat">
+   <div class="tool-icon">💬</div>
+   <h3>AI Chat</h3>
+   <p>Ask questions and explore ideas with AI.</p>
+   <button onclick="openTool('AI Chat')">Open Tool →</button>
+  </div>
+
+  <div class="tool" data-category="image" data-name="AI Logo Maker">
+   <div class="tool-icon">✳️</div>
+   <h3>AI Logo Maker</h3>
+   <p>Develop creative logo concepts for brands.</p>
+   <button onclick="openTool('AI Logo Maker')">Open Tool →</button>
+  </div>
+
+  <div class="tool" data-category="writing" data-name="AI Story Maker">
+   <div class="tool-icon">📖</div>
+   <h3>AI Story Maker</h3>
+   <p>Turn your ideas into original stories.</p>
+   <button onclick="openTool('AI Story Maker')">Open Tool →</button>
+  </div>
+
+  <div class="tool" data-category="audio" data-name="AI Music Generator">
+   <div class="tool-icon">🎵</div>
+   <h3>AI Music Generator</h3>
+   <p>Create original music concepts and tracks.</p>
+   <button onclick="openTool('AI Music Generator')">Open Tool →</button>
+  </div>
+
+  <div class="tool" data-category="writing" data-name="AI Translator">
+   <div class="tool-icon">🌐</div>
+   <h3>AI Translator</h3>
+   <p>Translate text between different languages.</p>
+   <button onclick="openTool('AI Translator')">Open Tool →</button>
+  </div>
+
+  <div class="tool" data-category="image" data-name="AI Thumbnail Maker">
+   <div class="tool-icon">🖼️</div>
+   <h3>AI Thumbnail Maker</h3>
+   <p>Design attractive thumbnail concepts.</p>
+   <button onclick="openTool('AI Thumbnail Maker')">Open Tool →</button>
+  </div>
+
+  <div class="tool" data-category="image" data-name="AI Avatar Generator">
+   <div class="tool-icon">👤</div>
+   <h3>AI Avatar Generator</h3>
+   <p>Create custom avatar concepts.</p>
+   <button onclick="openTool('AI Avatar Generator')">Open Tool →</button>
+  </div>
+
+  <div class="tool" data-category="writing" data-name="AI Script Writer">
+   <div class="tool-icon">✍️</div>
+   <h3>AI Script Writer</h3>
+   <p>Generate scripts for videos and content.</p>
+   <button onclick="openTool('AI Script Writer')">Open Tool →</button>
+  </div>
+
+  <div class="empty" id="empty">No matching tools found.</div>
+ </div>
+</section>
+
+<section class="section" id="about">
+ <h2>Welcome to NEXORA AI</h2>
+ <p style="color:#9ba9c0;line-height:1.8;margin-top:12px;max-width:650px">
+  A creative workspace bringing AI-powered tools together in one place.
+  Our goal is to make digital creativity simple and accessible.
+ </p>
+</section>
+
+<footer>
+ © 2026 NEXORA AI. All rights reserved.
+</footer>
+
+<div id="notice" onclick="closeNotice(event)">
+ <div class="modal">
+  <h3 id="modalTitle">Tool</h3>
+  <p id="modalText"></p>
+  <button onclick="closeNotice()">Close</button>
+ </div>
+</div>
+
+<script>
+let currentFilter="all";
+
+function goToTools(){
+ document.getElementById("tools").scrollIntoView({behavior:"smooth"});
+}
+
+document.querySelectorAll(".filter").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll(".filter").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+  currentFilter=button.dataset.filter;
+  searchTools();
+ });
+});
+
+function searchTools(){
+ const query=document.getElementById("searchInput").value.toLowerCase();
+ const cards=document.querySelectorAll(".tool");
+ let visible=0;
+
+ cards.forEach(card=>{
+  const name=card.dataset.name.toLowerCase();
+  const category=card.dataset.category;
+  const matchesName=name.includes(query);
+  const matchesCategory=currentFilter==="all" || category===currentFilter;
+  const show=matchesName && matchesCategory;
+  card.style.display=show?"block":"none";
+  if(show)visible++;
+ });
+
+ document.getElementById("empty").style.display=visible?"none":"block";
+}
+
+function openTool(name){
+ document.getElementById("modalTitle").textContent=name;
+ document.getElementById("modalText").textContent=
+  "This tool's interface and AI service integration will be added in the next development stages. AI generation is not connected yet.";
+ document.getElementById("notice").style.display="flex";
+}
+
+function closeNotice(event){
+ if(!event || event.target.id==="notice"){
+  document.getElementById("notice").style.display="none";
+ }
+}
+</script>
+
+</body>
+    </html>
+
